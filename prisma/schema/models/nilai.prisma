@@ -1,0 +1,9 @@
+model Nilai {
+    id BigInt @id @default(autoincrement())
+    pengumpulan Pengumpulan @relation(fields: [pengumpulanId], references: [id], onDelete: Cascade)
+    pengumpulanId BigInt @unique
+
+    nilai BigInt
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}

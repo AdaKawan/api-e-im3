@@ -1,0 +1,6 @@
+model Role {
+    id BigInt @id @default(autoincrement())
+    role String
+
+    user User[]
+}

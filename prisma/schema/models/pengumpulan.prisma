@@ -1,0 +1,16 @@
+model Pengumpulan {
+    id BigInt @id @default(autoincrement())
+    
+    tugas Tugas @relation(fields: [tugasId], references: [id], onDelete: Cascade)
+    tugasId BigInt
+
+    pengumpul User @relation(fields: [pengumpulId], references: [id], onDelete: Cascade)
+    pengumpulId BigInt
+
+    isi_pengumpulan Json[]
+
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+
+    nilai Nilai?
+}

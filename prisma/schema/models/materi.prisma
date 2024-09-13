@@ -1,0 +1,17 @@
+model Materi {
+    id BigInt @id @default(autoincrement())
+    pelajaran Pelajaran @relation(fields: [pelajaranId], references: [id], onDelete: Cascade)
+    pelajaranId BigInt
+
+    creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+    creatorId BigInt
+    
+    nama_materi String
+    isi_materi String
+    file_url String[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    tugas Tugas[]
+    user UserOnMateri[]
+}

@@ -1,0 +1,16 @@
+model Tugas {
+    id BigInt @id @default(autoincrement())
+    materi Materi @relation(fields: [materiId], references: [id],  onDelete: Cascade)
+    materiId BigInt
+
+    creator User @relation(fields: [creatorId], references: [id],  onDelete: Cascade)
+    creatorId BigInt
+
+    nama_tugas String
+    isi_tugas Json[]
+    deadline DateTime
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+
+    pengumpulan Pengumpulan[]
+}

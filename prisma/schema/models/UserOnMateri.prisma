@@ -1,0 +1,9 @@
+model UserOnMateri {
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId BigInt
+
+    materi Materi @relation(fields: [materiId], references: [id], onDelete: Cascade)
+    materiId BigInt
+
+    @@unique([userId, materiId])
+}

@@ -1,0 +1,23 @@
+model User {
+    id BigInt @id @default(autoincrement())
+    nama_lengkap String
+    email String? @unique
+    username String @unique
+    password String
+    role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+    roleId BigInt
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+
+    kelas UserOnKelas[]
+    materi UserOnMateri[]
+    
+    createdMateri Materi[]
+    createdTugas Tugas[]
+    createdPelajaran Pelajaran[]
+
+    jit RefreshToken[]
+    pengumpulan Pengumpulan[]
+
+    @@index([nama_lengkap, email, username])
+}
