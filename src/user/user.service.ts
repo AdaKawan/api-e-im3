@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { GuruData } from 'src/common/types/user.types';
 import * as argon2 from 'argon2';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 
 @Injectable()
 export class UserService {
@@ -117,6 +118,15 @@ export class UserService {
     });
   }
 
+  async updateUserProfile(id: number, updateUserProfileDto: UpdateUserProfileDto): Promise<User> {
+    const { confPassword, ...data } = updateUserProfileDto;
+    data.password = await argon2.hash(updateUserProfileDto.password);
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
   async delete(id: number) {
     return this.prisma.user.delete({
       where: { id },
@@ -174,6 +184,13 @@ export class UserService {
     return this.prisma.user.findMany({
       where: data.where,
       include: data.include,
+    });
+  }
+
+  async toggleActiveStatus(id: number, isActive: boolean): Promise<User> {
+    return this.prisma.user.update({
+      where: { id },
+      data: { isActive },
     });
   }
 }

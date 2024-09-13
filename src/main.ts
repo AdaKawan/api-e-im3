@@ -44,19 +44,6 @@ async function bootstrap() {
       'https://localhost:3000',
     ],
     credentials: true,
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-Requested-With',
-      'Accept',
-      'Origin',
-      'X-Auth-Token',
-      'Access-Control-Request-Method',
-      'Access-Control-Request-Headers',
-      'X-Frame-Options',
-      'X-Content-Type-Options',
-      'X-Permitted-Cross-Domain-Policies',
-    ],
   });
 
   const document = SwaggerModule.createDocument(app, config);

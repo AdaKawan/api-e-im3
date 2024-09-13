@@ -9,6 +9,7 @@ export const PrismaExtensions = new PrismaClient().$extends({
         const guru = await new PrismaClient().user.findMany({
           where: {
             roleId: 2,
+            isActive: true,
           },
           select: {
             id: true,
@@ -34,6 +35,7 @@ export const PrismaExtensions = new PrismaClient().$extends({
         const siswa = await new PrismaClient().user.findMany({
           where: {
             roleId: 3,
+            isActive: true
           },
           select: {
             id: true,

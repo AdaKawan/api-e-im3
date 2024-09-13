@@ -11,6 +11,7 @@ import {
   UnauthorizedException,
   Res,
   InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -22,6 +23,7 @@ import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -32,6 +34,26 @@ export class AuthController {
     private readonly refresTokenService: RefreshTokenService,
     private jwtService: JwtService,
   ) { }
+
+  @Post('register')
+  @ApiOperation({ summary: 'Register' })
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    if (registerDto.roleId === 2) {
+      if (!registerDto.asal_sekolah) {
+        throw new BadRequestException('Guru wajib mengisi asal sekolah')
+      }
+    }
+
+    const user = this.userService.create(registerDto)
+
+    return res.status(201).json(
+      success('Pendaftaran sukses mohon tunggu konfirmasi admin'),
+    );
+  }
 
   @Post('login')
   @ApiOperation({ summary: 'Login' })
@@ -50,6 +72,8 @@ export class AuthController {
     );
 
     if (!user) throw new NotFoundException('User tidak ditemukan');
+
+    if (!user.isActive) throw new UnauthorizedException('Maaf Akun anda belum aktif mohon tunggu konfirmasi admin')
 
     const userId = Number(user.id);
 
