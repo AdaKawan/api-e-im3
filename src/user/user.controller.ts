@@ -117,11 +117,6 @@ export class UserController {
             role: true,
           },
         },
-        kelas: {
-          select: {
-            kelas: true,
-          },
-        },
         createdPelajaran: {
           select: {
             nama_pelajaran: true,
@@ -166,16 +161,6 @@ export class UserController {
         nama_lengkap: true,
         username: true,
         email: true,
-        kelas: {
-          select: {
-            kelasId: true,
-            kelas: {
-              select: {
-                nama_kelas: true
-              }
-            }
-          }
-        },
         materi: {
           select: {
             materiId: true,

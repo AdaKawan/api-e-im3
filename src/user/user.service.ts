@@ -54,7 +54,8 @@ export class UserService {
         roleId: true,
         createdAt: true,
         updatedAt: true,
-        kelas: true,
+        asal_sekolah: true,
+        isActive: true,
         materi: true,
         jit: true,
       },
@@ -74,7 +75,8 @@ export class UserService {
         roleId: true,
         createdAt: true,
         updatedAt: true,
-        kelas: true,
+        asal_sekolah: true,
+        isActive: true,
         materi: true,
         jit: true,
       },
@@ -93,6 +95,8 @@ export class UserService {
         nama_lengkap: true,
         email: true,
         username: true,
+        isActive: true,
+        asal_sekolah: true,
         role: {
           select: {
             role: true,
@@ -150,46 +154,12 @@ export class UserService {
   }
 
   async findManyStudents(role: string, userId: number) {
-    if (role === 'admin') {
+    if (role === 'admin' || role === 'guru') {
       return this.prisma.user.findMany({
         where: {
           role: {
             id: 3,
           },
-        },
-      });
-    }
-
-    if (role === 'guru') {
-      const kelasIds = await this.prisma.userOnKelas.findMany({
-        where: {
-          userId: userId,
-        },
-        select: {
-          kelasId: true,
-        },
-      });
-
-      return this.prisma.user.findMany({
-        where: {
-          role: {
-            id: 3,
-          },
-          kelas: {
-            some: {
-              kelasId: {
-                in: kelasIds.map((kelas) => kelas.kelasId),
-              },
-            },
-          },
-        },
-        select: {
-          id: true,
-          nama_lengkap: true,
-          email: true,
-          username: true,
-          createdAt: true,
-          updatedAt: true,
         },
       });
     }

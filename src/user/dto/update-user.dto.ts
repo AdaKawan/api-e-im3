@@ -5,6 +5,7 @@ import {
   MinLength,
   IsOptional,
   IsNumber,
+  IsBoolean,
 } from 'class-validator';
 
 export class UpdateUserDto {
@@ -35,4 +36,14 @@ export class UpdateUserDto {
   @MinLength(8)
   @ApiProperty({ required: true })
   confPassword: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  asal_sekolah?: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  isActive: boolean;
 }

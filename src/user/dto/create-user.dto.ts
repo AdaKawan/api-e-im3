@@ -5,6 +5,7 @@ import {
   IsString,
   MinLength,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -37,6 +38,17 @@ export class CreateUserDto {
   confPassword: string;
 
   @IsNumber()
+  @IsNotEmpty()
   @ApiProperty({ required: true })
   roleId: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  asal_sekolah?: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  isActive: boolean;
 }

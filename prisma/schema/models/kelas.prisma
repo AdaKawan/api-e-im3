@@ -1,9 +1,0 @@
-model Kelas {
-    id BigInt @id @default(autoincrement())
-    nama_kelas String @unique
-
-    users UserOnKelas[]
-    pelajaran Pelajaran[]
-
-    @@index([nama_kelas])
-}

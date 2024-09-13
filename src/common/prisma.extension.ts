@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { User } from 'src/user/entities/user.entity';
-import { GuruData, SiswaData } from './types/user.types';
+import { GuruData } from './types/user.types';
 
 export const PrismaExtensions = new PrismaClient().$extends({
   model: {
@@ -16,6 +16,8 @@ export const PrismaExtensions = new PrismaClient().$extends({
             username: true,
             email: true,
             roleId: true,
+            asal_sekolah: true,
+            isActive: true,
             role: {
               select: {
                 id: true,
@@ -24,11 +26,6 @@ export const PrismaExtensions = new PrismaClient().$extends({
             },
             createdAt: true,
             updatedAt: true,
-            kelas: {
-              select: {
-                kelas: true,
-              },
-            },
           },
         });
         return guru;
@@ -44,15 +41,11 @@ export const PrismaExtensions = new PrismaClient().$extends({
             username: true,
             email: true,
             roleId: true,
+            isActive: true,
             role: {
               select: {
                 id: true,
                 role: true,
-              },
-            },
-            kelas: {
-              select: {
-                kelas: true,
               },
             },
             materi: {

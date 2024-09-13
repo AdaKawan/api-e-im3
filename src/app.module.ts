@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { KelasModule } from './kelas/kelas.module';
-import { UserOnKelasModule } from './user-on-kelas/user-on-kelas.module';
 import { PelajaranModule } from './pelajaran/pelajaran.module';
 import { MateriModule } from './materi/materi.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -27,7 +26,6 @@ import { AuthModule } from './auth/auth.module';
     PrismaModule,
     UserModule,
     KelasModule,
-    UserOnKelasModule,
     PelajaranModule,
     MateriModule,
     TugasModule,
@@ -40,4 +38,4 @@ import { AuthModule } from './auth/auth.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
