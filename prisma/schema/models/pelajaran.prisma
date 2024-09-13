@@ -1,7 +1,7 @@
 model Pelajaran {
     id BigInt @id @default(autoincrement())
-    // kelas Kelas @relation(fields: [kelasId], references: [id], onDelete: Cascade)
-    // kelasId BigInt
+    jenjang_kelas Int
+    asal_sekolah String
     creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
     creatorId BigInt
     

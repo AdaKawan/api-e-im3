@@ -67,6 +67,7 @@ export class AuthController {
         id: userId,
         nama_lengkap: user.nama_lengkap,
         role: user.role.role,
+        asal_sekolah: user.asal_sekolah,
         refresh_token: refreshToken.refresh_token,
       }),
     );
@@ -157,6 +158,7 @@ export class AuthController {
           id: Number(user.id),
           nama_lengkap: user.nama_lengkap,
           role: user.role.role,
+          asal_sekolah: user.asal_sekolah,
           refresh_token: token.refresh_token,
         }),
       );
@@ -219,6 +221,7 @@ export class AuthController {
           id: Number(user.id),
           nama_lengkap: user.nama_lengkap,
           role: user.role.role,
+          asal_sekolah: user.asal_sekolah,
         }),
       );
     } catch (error) {
