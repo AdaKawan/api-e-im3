@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { put, del } from '@vercel/blob';
+import * as fs from "fs"
 
 export const validateAndUploadFile = async (
   routeFolder: string,
@@ -9,8 +9,34 @@ export const validateAndUploadFile = async (
 ) => {
   if (!file) throw new BadRequestException('File wajib diupload');
 
+  const fileDocumentExtensions = ['.pdf', '.docx', '.doc', '.mp4'];
+  const videoExtensions = [
+    ".mp4",
+    ".mov",
+    ".avi",
+    ".wmv",
+    ".flv",
+    ".f4v",
+    ".mkv",
+    ".webm",
+    ".avchd",
+    ".mpeg",
+    ".3gp",
+    ".3g2",
+    ".ogv",
+    ".m4v",
+    ".prores",
+    ".dnxhr",
+    ".dnxhd"
+  ];
+  const imageExtensions = ['.jpg', '.png']
+
   const ext = path.extname(file.originalname).toLowerCase();
-  const allowedExtensions = ['.pdf', '.docx', '.doc'];
+  const allowedExtensions = [
+    ...fileDocumentExtensions,
+    ...videoExtensions,
+    ...imageExtensions
+  ];
 
   if (!allowedExtensions.includes(ext)) {
     throw new BadRequestException(
@@ -22,13 +48,8 @@ export const validateAndUploadFile = async (
   const newFileName = `${uniqueSuffix}${ext}`;
   const folder = ext === '.pdf' ? 'pdf' : 'doc';
 
-  const { url } = await put(
-    `${routeFolder}/${folder}/${newFileName}`,
-    file.buffer,
-    { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN },
-  );
-  // const uploadPathPdf = path.join(__dirname, '..', '..', '..', 'public', '${routeFolder}', '${folder}', newFileName);
-  // fs.writeFileSync(uploadPathPdf, file.buffer);
+  const uploadPathPdf = path.join(__dirname, '..', '..', '..', 'public', '${routeFolder}', '${folder}', newFileName);
+  fs.writeFileSync(uploadPathPdf, file.buffer);
 
   return { fileName: newFileName, fileUrl: url };
 };
