@@ -114,11 +114,6 @@ export class TugasController {
           pengumpul: {
             select: {
               nama_lengkap: true,
-              kelas: {
-                select: {
-                  kelas: true,
-                },
-              },
             },
           },
         },
