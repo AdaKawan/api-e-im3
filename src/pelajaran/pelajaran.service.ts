@@ -10,7 +10,7 @@ import { Pelajaran, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PelajaranService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(
     data: CreatePelajaranDto,
@@ -27,16 +27,15 @@ export class PelajaranService {
     }
 
     if (role === 'guru') {
-      const isOwner = await this.prisma.userOnKelas.findFirst({
+      const isInSchool = await this.prisma.user.findFirst({
         where: {
-          userId,
-          kelasId: data.kelasId,
+          id: userId,
         },
       });
 
-      if (!isOwner) {
+      if (isInSchool.asal_sekolah === data.asal_sekolah) {
         throw new ForbiddenException(
-          'Anda tidak memiliki akses untuk membuat pelajaran pada kelas ini.',
+          'Anda tidak memiliki akses untuk membuat pelajaran pada sekolah ini.',
         );
       }
 

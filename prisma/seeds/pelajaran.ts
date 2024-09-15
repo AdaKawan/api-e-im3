@@ -5,8 +5,9 @@ export async function pelajaranSeed() {
         where: { id: 1 },
         update: {},
         create: {
-            nama_pelajaran: "Pelajaran A Kelas 1A",
-            kelasId: 1,
+            nama_pelajaran: "Pelajaran A SMP Negeri 2 Barat Kelas 1",
+            jenjang_kelas: 1,
+            asal_sekolah: 'smp negeri 2 barat',
             creatorId: 2
         }
     })
@@ -15,8 +16,9 @@ export async function pelajaranSeed() {
         where: { id: 2 },
         update: {},
         create: {
-            nama_pelajaran: "Pelajaran B Kelas 1A",
-            kelasId: 1,
+            nama_pelajaran: "Pelajaran B Kelas 2",
+            jenjang_kelas: 2,
+            asal_sekolah: 'smp negeri 2 barat',
             creatorId: 2
         }
     })
@@ -25,8 +27,9 @@ export async function pelajaranSeed() {
         where: { id: 3 },
         update: {},
         create: {
-            nama_pelajaran: "Pelajaran A Kelas 1B",
-            kelasId: 2,
+            nama_pelajaran: "Pelajaran SMP Negeri 1 Lembeyan Kelas 1",
+            jenjang_kelas: 1,
+            asal_sekolah: 'smp negeri 1 lembeyan',
             creatorId: 3
         }
     })
@@ -35,8 +38,9 @@ export async function pelajaranSeed() {
         where: { id: 4 },
         update: {},
         create: {
-            nama_pelajaran: "Pelajaran B Kelas 1B",
-            kelasId: 2,
+            nama_pelajaran: "Pelajaran SMP Negeri 1 Lembeyan Kelas 2",
+            jenjang_kelas: 2,
+            asal_sekolah: 'smp negeri 1 lembeyan',
             creatorId: 3
         }
     })

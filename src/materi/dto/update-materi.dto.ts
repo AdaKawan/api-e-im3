@@ -21,22 +21,4 @@ export class UpdateMateriDto {
   @IsNotEmpty()
   @IsString()
   isi_materi: string;
-
-  // @ApiProperty({
-  //   description: 'File materi',
-  //   example: 'file.pdf',
-  //   required: false,
-  // })
-  // @IsOptional()
-  // @IsString()
-  // file: string;
-
-  @ApiProperty({
-    description: 'File URL materi',
-    example: 'https://example.com/public/file.pdf',
-    required: false,
-  })
-  @IsOptional()
-  @IsArray()
-  file_url: string[];
 }

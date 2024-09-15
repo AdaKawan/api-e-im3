@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { GuruData } from 'src/common/types/user.types';
 import * as argon2 from 'argon2';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 
 @Injectable()
 export class UserService {
@@ -54,7 +55,8 @@ export class UserService {
         roleId: true,
         createdAt: true,
         updatedAt: true,
-        kelas: true,
+        asal_sekolah: true,
+        isActive: true,
         materi: true,
         jit: true,
       },
@@ -74,7 +76,8 @@ export class UserService {
         roleId: true,
         createdAt: true,
         updatedAt: true,
-        kelas: true,
+        asal_sekolah: true,
+        isActive: true,
         materi: true,
         jit: true,
       },
@@ -93,6 +96,8 @@ export class UserService {
         nama_lengkap: true,
         email: true,
         username: true,
+        isActive: true,
+        asal_sekolah: true,
         role: {
           select: {
             role: true,
@@ -107,6 +112,15 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const { confPassword, ...data } = updateUserDto;
     data.password = await argon2.hash(updateUserDto.password);
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async updateUserProfile(id: number, updateUserProfileDto: UpdateUserProfileDto): Promise<User> {
+    const { confPassword, ...data } = updateUserProfileDto;
+    data.password = await argon2.hash(updateUserProfileDto.password);
     return this.prisma.user.update({
       where: { id },
       data,
@@ -150,46 +164,12 @@ export class UserService {
   }
 
   async findManyStudents(role: string, userId: number) {
-    if (role === 'admin') {
+    if (role === 'admin' || role === 'guru') {
       return this.prisma.user.findMany({
         where: {
           role: {
             id: 3,
           },
-        },
-      });
-    }
-
-    if (role === 'guru') {
-      const kelasIds = await this.prisma.userOnKelas.findMany({
-        where: {
-          userId: userId,
-        },
-        select: {
-          kelasId: true,
-        },
-      });
-
-      return this.prisma.user.findMany({
-        where: {
-          role: {
-            id: 3,
-          },
-          kelas: {
-            some: {
-              kelasId: {
-                in: kelasIds.map((kelas) => kelas.kelasId),
-              },
-            },
-          },
-        },
-        select: {
-          id: true,
-          nama_lengkap: true,
-          email: true,
-          username: true,
-          createdAt: true,
-          updatedAt: true,
         },
       });
     }
@@ -204,6 +184,13 @@ export class UserService {
     return this.prisma.user.findMany({
       where: data.where,
       include: data.include,
+    });
+  }
+
+  async toggleActiveStatus(id: number, isActive: boolean): Promise<User> {
+    return this.prisma.user.update({
+      where: { id },
+      data: { isActive },
     });
   }
 }

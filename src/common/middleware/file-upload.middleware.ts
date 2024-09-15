@@ -11,10 +11,8 @@ import * as path from 'path';
 export class FileUploadMiddleware implements NestMiddleware {
   private readonly upload = multer({
     fileFilter: (req, file, callback) => {
-      console.log(req.file);
       const allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf']; // Tambahkan ekstensi yang diizinkan
       const extname = path.extname(file.originalname).toLowerCase();
-      console.log('Extention', extname);
       if (!allowedExtensions.includes(extname)) {
         return callback(new BadRequestException('Invalid file type'));
       }
@@ -38,13 +36,11 @@ export class FileUploadMiddleware implements NestMiddleware {
           });
         }
         if (err.message === 'Unexpected end of form') {
-          console.log(err);
           return res.status(400).json({
             statusCode: 400,
             message: 'Incomplete form data. Please try again.',
           });
         }
-        console.log(err);
         return res.status(400).json({
           statusCode: 400,
           message: err.message || 'An error occurred while uploading the file.',

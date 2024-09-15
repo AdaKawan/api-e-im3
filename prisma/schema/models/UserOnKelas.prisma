@@ -1,9 +1,0 @@
-model UserOnKelas {
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId BigInt
-    
-    kelas Kelas @relation(fields: [kelasId], references: [id], onDelete: Cascade)
-    kelasId BigInt
-
-    @@unique([userId, kelasId])
-}

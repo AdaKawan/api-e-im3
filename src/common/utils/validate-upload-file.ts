@@ -1,34 +1,80 @@
 import { BadRequestException } from '@nestjs/common';
 import * as path from 'path';
+import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import { put, del } from '@vercel/blob';
 
-export const validateAndUploadFile = async (
+export const validateAndUploadFiles = async (
   routeFolder: string,
-  file: Express.Multer.File,
+  files: Express.Multer.File[],
 ) => {
-  if (!file) throw new BadRequestException('File wajib diupload');
+  const fileDocumentExtensions = ['.pdf', '.docx', '.doc'];
+  const videoExtensions = [
+    ".mp4",
+    ".mov",
+    ".avi",
+    ".wmv",
+    ".flv",
+    ".f4v",
+    ".mkv",
+    ".webm",
+    ".avchd",
+    ".mpeg",
+    ".3gp",
+    ".3g2",
+    ".ogv",
+    ".m4v",
+    ".prores",
+    ".dnxhr",
+    ".dnxhd"
+  ];
+  const imageExtensions = ['.jpg', '.png'];
 
-  const ext = path.extname(file.originalname).toLowerCase();
-  const allowedExtensions = ['.pdf', '.docx', '.doc'];
+  const allowedExtensions = [
+    ...fileDocumentExtensions,
+    ...videoExtensions,
+    ...imageExtensions
+  ];
 
-  if (!allowedExtensions.includes(ext)) {
-    throw new BadRequestException(
-      `File dengan ekstensi ${ext} tidak diizinkan.`,
-    );
+  const uploadedFiles = [];
+
+  for (const file of files) {
+    const ext = path.extname(file.originalname).toLowerCase();
+
+    if (!allowedExtensions.includes(ext)) {
+      throw new BadRequestException(
+        `File dengan ekstensi ${ext} tidak diizinkan.`,
+      );
+    }
+
+    const uniqueSuffix = uuidv4();
+    const newFileName = `${uniqueSuffix}${ext}`;
+    let folder = '';
+
+    if (fileDocumentExtensions.includes(ext)) {
+      folder = 'documents';
+    } else if (videoExtensions.includes(ext)) {
+      folder = 'videos';
+    } else if (imageExtensions.includes(ext)) {
+      folder = 'images';
+    }
+
+    const uploadPath = path.join(__dirname, '..', '..', '..', 'public', `${routeFolder}`, `${folder}`);
+
+    // Ensure the directory exists
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    const filePath = path.join(uploadPath, newFileName);
+    fs.writeFileSync(filePath, file.buffer);
+
+    const fileUrl = `http://localhost:6948/public/${routeFolder}/${folder}/${newFileName}`;
+    uploadedFiles.push({
+      fileName: newFileName,
+      fileUrl,
+      originalName: file.originalname
+    });
   }
 
-  const uniqueSuffix = uuidv4();
-  const newFileName = `${uniqueSuffix}${ext}`;
-  const folder = ext === '.pdf' ? 'pdf' : 'doc';
-
-  const { url } = await put(
-    `${routeFolder}/${folder}/${newFileName}`,
-    file.buffer,
-    { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN },
-  );
-  // const uploadPathPdf = path.join(__dirname, '..', '..', '..', 'public', '${routeFolder}', '${folder}', newFileName);
-  // fs.writeFileSync(uploadPathPdf, file.buffer);
-
-  return { fileName: newFileName, fileUrl: url };
+  return uploadedFiles;
 };

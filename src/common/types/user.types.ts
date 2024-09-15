@@ -18,18 +18,14 @@ export type GuruData = {
   email: string;
   username: string;
   roleId: bigint;
+  asal_sekolah: string;
+  isActive: boolean;
   role: {
     id: bigint;
     role: string;
   };
   createdAt: Date;
   updatedAt: Date;
-  kelas: {
-    kelas: {
-      id: bigint;
-      nama_kelas: string;
-    };
-  }[];
 };
 
 export type SiswaData = {

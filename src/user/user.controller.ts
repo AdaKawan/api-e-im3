@@ -11,6 +11,7 @@ import {
   BadRequestException,
   UseGuards,
   Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,6 +23,8 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { Roles } from 'src/common/anotations/roles';
 import { RoleGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
+import { UpdateIsActiveDto } from './dto/update-is-active.dto';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard)
@@ -111,15 +114,12 @@ export class UserController {
         nama_lengkap: true,
         username: true,
         email: true,
+        isActive: true,
+        asal_sekolah: true,
         role: {
           select: {
             id: true,
             role: true,
-          },
-        },
-        kelas: {
-          select: {
-            kelas: true,
           },
         },
         createdPelajaran: {
@@ -166,16 +166,7 @@ export class UserController {
         nama_lengkap: true,
         username: true,
         email: true,
-        kelas: {
-          select: {
-            kelasId: true,
-            kelas: {
-              select: {
-                nama_kelas: true
-              }
-            }
-          }
-        },
+        isActive: true,
         materi: {
           select: {
             materiId: true,
@@ -246,6 +237,22 @@ export class UserController {
 
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Update is Active User' })
+  @Patch('toggle-active/:id')
+  async toggleActiveStatus(
+    @Param('id') id: number,
+    @Body() updateIsActiveDto: UpdateIsActiveDto,
+  ) {
+    const user = await this.userService.findOne({ id });
+    if (!user) {
+      throw new NotFoundException('Pengguna tidak ditemukan.');
+    }
+
+    return this.userService.toggleActiveStatus(id, updateIsActiveDto.isActive);
+  }
+
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('delete/:id')
   @ApiOperation({ summary: 'Delete User' })
   async delete(@Param('id') id: number, @Res() res: Response) {
@@ -260,6 +267,80 @@ export class UserController {
     res.status(200).json({
       status: 'success',
       message: 'Berhasil menghapus',
+    });
+  }
+
+  @Roles('admin', 'guru', 'siswa')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'User Get Me' })
+  @Get('get-me')
+  async userGetMe(
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    const userId = req['user'].sub;
+    const role = req['role'];
+
+    if (role === 'admin') {
+      const user = this.userService.findOneWithSelectedField(
+        {
+          id: userId
+        },
+        {
+          id: true,
+          nama_lengkap: true,
+          email: true,
+          username: true,
+          role: {
+            select: {
+              role: true
+            }
+          },
+          asal_sekolah: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      )
+    }
+  }
+
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('update/:id')
+  @ApiOperation({ summary: 'Update User' })
+  @ApiBody({
+    description: 'Update User',
+    type: UpdateUserDto,
+    required: true,
+  })
+  async updateProfileUSer(
+    @Param('id') id: number,
+    @Res() res: Response,
+    @Body() updateUserProfileDto: UpdateUserProfileDto,
+    @Req() req: Request
+  ) {
+    const userId = req['user'].sub;
+    const role = req['role'];
+
+    if (userId !== id && role !== 'admin') {
+      throw new ForbiddenException('Anda tidak memiliki izin untuk memperbarui profil ini.');
+    }
+
+    const user = await this.userService.findOne({ id });
+
+    if (!user) throw new NotFoundException('User tidak ditemukan');
+
+    if (updateUserProfileDto.password !== updateUserProfileDto.confPassword)
+      throw new BadRequestException('Password dan confirm password tidak sama');
+
+    const userUpdate = await this.userService.updateUserProfile(id, updateUserProfileDto);
+
+    const { password, ...data } = userUpdate;
+    res.status(200).json({
+      status: 'success',
+      message: 'Berhasil mengubah data',
+      user: JSON.parse(JSON.stringify(data, BigIntToJSON)),
     });
   }
 }

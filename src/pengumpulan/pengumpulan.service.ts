@@ -12,40 +12,13 @@ export class PengumpulanService {
     pengumpulId: number,
     data: CreatePengumpulanDto,
   ): Promise<Partial<Pengumpulan>> {
-    const siswaKelas = await this.prisma.userOnKelas.findFirst({
-      where: {
-        userId: pengumpulId,
-      },
-      select: { kelasId: true },
-    });
-
-    if (!siswaKelas) {
-      throw new ForbiddenException('Siswa tidak terdaftar di kelas.');
-    }
-
     // Cari tugas
     const tugas = await this.prisma.tugas.findUnique({
       where: { id: data.tugasId },
-      select: {
-        materi: {
-          select: {
-            pelajaran: {
-              select: {
-                kelasId: true,
-              },
-            },
-          },
-        },
-      },
     });
 
     if (!tugas) {
       throw new ForbiddenException('Tugas tidak ditemukan.');
-    }
-
-    // Validasi kelas tugas
-    if (siswaKelas.kelasId !== tugas.materi.pelajaran.kelasId) {
-      throw new ForbiddenException('Tugas tidak sesuai dengan kelas siswa.');
     }
 
     // Jika valid, buat pengumpulan
@@ -195,8 +168,6 @@ export class PengumpulanService {
         nilai: true,
       },
     });
-
-    console.log(pengumpulan);
 
     if (!pengumpulan) {
       throw new ForbiddenException('Pengumpulan tidak ditemukan.');

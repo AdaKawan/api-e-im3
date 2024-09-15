@@ -24,11 +24,11 @@ import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { del, put } from '@vercel/blob';
-import { validateAndUploadFile } from 'src/common/utils/validate-upload-file';
+
 import { Roles } from 'src/common/anotations/roles';
 import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
 import { RoleGuard } from 'src/common/guards/roles.guard';
-import { validateAndUpdateFile } from 'src/common/utils/validate-update-file';
+
 import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @UseGuards(AuthGuard)

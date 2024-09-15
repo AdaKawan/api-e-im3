@@ -27,7 +27,7 @@ import { Prisma } from '@prisma/client';
 @Controller('pelajaran')
 @ApiTags('Pelajaran')
 export class PelajaranController {
-  constructor(private readonly pelajaranService: PelajaranService) {}
+  constructor(private readonly pelajaranService: PelajaranService) { }
 
   @Post('create')
   @Roles('admin', 'guru')
@@ -83,7 +83,6 @@ export class PelajaranController {
     let whereClause: Prisma.PelajaranWhereInput = { id };
     const includeClause: Prisma.PelajaranInclude = {
       materi: true,
-      kelas: true,
     };
 
     if (role === 'guru') {

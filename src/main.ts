@@ -9,9 +9,18 @@ import { InternalServerErrorExceptionFilter } from './common/exceptions/custom-i
 import * as cookieParser from 'cookie-parser';
 import { ForbiddenExceptionFilter } from './common/exceptions/custom-forbidden-excepion.filter';
 import { UnauthorizedExceptionFilter } from './common/exceptions/custom-unauthorized-exception.filter';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import { FileMiddleware } from './common/middleware/FileMiddleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // app.useStaticAssets(join(__dirname, '..', 'public'), {
+  //   prefix: '/public/',
+  // });
+
+  // app.use('/public/*', new FileMiddleware().use);
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(
@@ -25,12 +34,13 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('API Sekolah Muhammadiyah')
-    .setDescription('The cats API description')
+    .setTitle('API E-iM3')
+    .setDescription('API Development Aplikasi E-iM3')
     .setVersion('1.0')
     .addServer('https://api-e-im3.vercel.app', 'Production Servel')
     .addServer('http://localhost:5090', 'Dev Server Port 5090')
     .addServer('http://localhost:3000', 'Dev Server Port 3000')
+    .addServer('http://localhost:6948', 'Dev Server Port 6948')
     .build();
 
   app.use(cookieParser());
@@ -44,24 +54,11 @@ async function bootstrap() {
       'https://localhost:3000',
     ],
     credentials: true,
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-Requested-With',
-      'Accept',
-      'Origin',
-      'X-Auth-Token',
-      'Access-Control-Request-Method',
-      'Access-Control-Request-Headers',
-      'X-Frame-Options',
-      'X-Content-Type-Options',
-      'X-Permitted-Cross-Domain-Policies',
-    ],
   });
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, { useGlobalPrefix: true });
 
-  await app.listen(3000);
+  await app.listen(6948);
 }
 bootstrap();

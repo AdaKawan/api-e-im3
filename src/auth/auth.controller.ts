@@ -11,6 +11,7 @@ import {
   UnauthorizedException,
   Res,
   InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -18,10 +19,11 @@ import { Request, Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import * as argon2 from 'argon2';
 import { success } from 'src/common/utils/responseHandler';
-import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -33,8 +35,60 @@ export class AuthController {
     private jwtService: JwtService,
   ) { }
 
+  @Post('register')
+  @ApiOperation({ summary: 'Register' })
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    if (registerDto.roleId === 2) {
+      if (!registerDto.asal_sekolah) {
+        throw new BadRequestException('Guru wajib mengisi asal sekolah')
+      }
+    }
+
+    const user = this.userService.create(registerDto)
+
+    return res.status(201).json(
+      success('Pendaftaran sukses mohon tunggu konfirmasi admin'),
+    );
+  }
+
   @Post('login')
   @ApiOperation({ summary: 'Login' })
+  @ApiBody({
+    type: LoginDto,
+    examples: {
+      loginAdmin: {
+        summary: 'Admin Login',
+        description: 'Digunakan untuk login sebagai admin',
+        value: {
+          username: "admin",
+          password: "admin12345678",
+          rememberMe: true
+        }
+      },
+      guruSmpNegeri2Barat: {
+        summary: 'Guru SMP Negeri 2 Barat Login',
+        description: 'Digunakan untuk login sebagai Guru SMP Negeri 2 Barat',
+        value: {
+          username: "gurusmpnegeri2barat",
+          password: "gurusmpnegeri2barat",
+          rememberMe: true
+        }
+      },
+      guruSmpNegeri1Lembeyan: {
+        summary: 'Guru SMP Negeri 1 Lembeyan Login',
+        description: 'Digunakan untuk login sebagai Guru SMP Negeri 1 Lembeyan',
+        value: {
+          username: "guruSmpNegeri1Lembeyan",
+          password: "gurusmpnegeri1lembeyan",
+          rememberMe: true
+        }
+      },
+    }
+  })
   async login(
     @Body() loginDto: LoginDto,
     @Req() req: Request,
@@ -50,6 +104,8 @@ export class AuthController {
     );
 
     if (!user) throw new NotFoundException('User tidak ditemukan');
+
+    if (!user.isActive) throw new UnauthorizedException('Maaf Akun anda belum aktif mohon tunggu konfirmasi admin')
 
     const userId = Number(user.id);
 
@@ -67,6 +123,7 @@ export class AuthController {
         id: userId,
         nama_lengkap: user.nama_lengkap,
         role: user.role.role,
+        asal_sekolah: user.asal_sekolah,
         refresh_token: refreshToken.refresh_token,
       }),
     );
@@ -157,6 +214,7 @@ export class AuthController {
           id: Number(user.id),
           nama_lengkap: user.nama_lengkap,
           role: user.role.role,
+          asal_sekolah: user.asal_sekolah,
           refresh_token: token.refresh_token,
         }),
       );
@@ -177,12 +235,9 @@ export class AuthController {
   @ApiOperation({ summary: 'Get Me' })
   async getMe(@Req() req: Request, @Res() res: Response) {
     try {
-      console.log('header', req.headers)
       const headerAut = req.headers.authorization;
-      console.log(headerAut)
       const splitHeader = headerAut.split(' ');
       const refreshToken = splitHeader[1];
-      console.log(refreshToken)
       // const data = req.cookies['data'];
 
       if (!refreshToken) {
@@ -191,7 +246,6 @@ export class AuthController {
 
       const decode = await this.jwtService.verifyAsync(refreshToken);
 
-      console.log(decode)
 
       const { sub, username, email, role, jti } = decode;
 
@@ -219,10 +273,10 @@ export class AuthController {
           id: Number(user.id),
           nama_lengkap: user.nama_lengkap,
           role: user.role.role,
+          asal_sekolah: user.asal_sekolah,
         }),
       );
     } catch (error) {
-      console.log(error)
       if (error instanceof TokenExpiredError) {
         throw new UnauthorizedException('Token has expired');
       } else if (error.name === 'JsonWebTokenError') {
