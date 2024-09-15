@@ -7,7 +7,7 @@ import * as moment from 'moment-timezone';
 
 @Injectable()
 export class RefreshTokenService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async isJtiUsed(jti: string): Promise<boolean> {
     const token = await this.prisma.refreshToken.findMany({
@@ -35,7 +35,6 @@ export class RefreshTokenService {
     const localTime = now.tz(timeZone);
     const localString = localTime.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
-    console.log(localTime.format('YYYY-MM-DDTHH:mm:ss.SSSZ'));
 
     await this.prisma.refreshToken.create({
       data: {
@@ -53,7 +52,6 @@ export class RefreshTokenService {
     const localTime = now.tz(timeZone);
     const localString = localTime.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
-    console.log(localTime.format('YYYY-MM-DDTHH:mm:ss.SSSZ'));
     await this.prisma.refreshToken.update({
       where: {
         jti: oldJti,
@@ -100,7 +98,6 @@ export class RefreshTokenService {
     const localDate = new Date(
       new Date().getTime() + new Date().getTimezoneOffset() * 60000,
     );
-    console.log(localDate);
     return await this.prisma.refreshToken.findMany({
       where: {
         expiredDate: {

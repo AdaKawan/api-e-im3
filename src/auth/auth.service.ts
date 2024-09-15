@@ -13,7 +13,7 @@ export class AuthService {
     private userService: UserService,
     private refresTokenService: RefreshTokenService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async login(user: User & { role: Role }) {
     const jti = uuidV4();
@@ -68,7 +68,6 @@ export class AuthService {
         refresh_token: await this.jwtService.signAsync(payload),
       };
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException(error);
     }
   }

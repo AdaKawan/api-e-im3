@@ -19,7 +19,7 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'public'),
+      rootPath: join(__dirname, '..', 'public'),
       serveRoot: '/public/',
     }),
     PrismaModule,

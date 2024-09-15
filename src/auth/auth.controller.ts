@@ -19,7 +19,7 @@ import { Request, Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import * as argon2 from 'argon2';
 import { success } from 'src/common/utils/responseHandler';
-import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
@@ -57,6 +57,38 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ summary: 'Login' })
+  @ApiBody({
+    type: LoginDto,
+    examples: {
+      loginAdmin: {
+        summary: 'Admin Login',
+        description: 'Digunakan untuk login sebagai admin',
+        value: {
+          username: "admin",
+          password: "admin12345678",
+          rememberMe: true
+        }
+      },
+      guruSmpNegeri2Barat: {
+        summary: 'Guru SMP Negeri 2 Barat Login',
+        description: 'Digunakan untuk login sebagai Guru SMP Negeri 2 Barat',
+        value: {
+          username: "gurusmpnegeri2barat",
+          password: "gurusmpnegeri2barat",
+          rememberMe: true
+        }
+      },
+      guruSmpNegeri1Lembeyan: {
+        summary: 'Guru SMP Negeri 1 Lembeyan Login',
+        description: 'Digunakan untuk login sebagai Guru SMP Negeri 1 Lembeyan',
+        value: {
+          username: "guruSmpNegeri1Lembeyan",
+          password: "gurusmpnegeri1lembeyan",
+          rememberMe: true
+        }
+      },
+    }
+  })
   async login(
     @Body() loginDto: LoginDto,
     @Req() req: Request,
@@ -203,12 +235,9 @@ export class AuthController {
   @ApiOperation({ summary: 'Get Me' })
   async getMe(@Req() req: Request, @Res() res: Response) {
     try {
-      console.log('header', req.headers)
       const headerAut = req.headers.authorization;
-      console.log(headerAut)
       const splitHeader = headerAut.split(' ');
       const refreshToken = splitHeader[1];
-      console.log(refreshToken)
       // const data = req.cookies['data'];
 
       if (!refreshToken) {
@@ -217,7 +246,6 @@ export class AuthController {
 
       const decode = await this.jwtService.verifyAsync(refreshToken);
 
-      console.log(decode)
 
       const { sub, username, email, role, jti } = decode;
 
@@ -249,7 +277,6 @@ export class AuthController {
         }),
       );
     } catch (error) {
-      console.log(error)
       if (error instanceof TokenExpiredError) {
         throw new UnauthorizedException('Token has expired');
       } else if (error.name === 'JsonWebTokenError') {

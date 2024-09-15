@@ -169,8 +169,6 @@ export class PengumpulanService {
       },
     });
 
-    console.log(pengumpulan);
-
     if (!pengumpulan) {
       throw new ForbiddenException('Pengumpulan tidak ditemukan.');
     }

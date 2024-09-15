@@ -11,10 +11,10 @@ async function main() {
     await roleSeed()
     await userSeed()
     await pelajaranSeed()
-    await materiSeed()
-    await tugasSeed()
-    await pengumpulanSeed()
-    await nilaiSeed()
+    // await materiSeed()
+    // await tugasSeed()
+    // await pengumpulanSeed()
+    // await nilaiSeed()
 }
 
 main()

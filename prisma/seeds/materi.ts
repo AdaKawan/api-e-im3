@@ -5,7 +5,23 @@ export async function materiSeed() {
         where: { id: 1 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi A Pelajaran A Kelas 1A",
             pelajaranId: 1,
             creatorId: 2,
@@ -17,7 +33,23 @@ export async function materiSeed() {
         where: { id: 2 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi B Pelajaran A Kelas 1A",
             pelajaranId: 1,
             creatorId: 2,
@@ -29,7 +61,23 @@ export async function materiSeed() {
         where: { id: 3 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi A Pelajaran B Kelas 1A",
             pelajaranId: 2,
             creatorId: 2,
@@ -41,7 +89,23 @@ export async function materiSeed() {
         where: { id: 4 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi B Pelajaran B Kelas 1A",
             pelajaranId: 2,
             creatorId: 2,
@@ -53,7 +117,23 @@ export async function materiSeed() {
         where: { id: 5 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi A Pelajaran A Kelas 1B",
             pelajaranId: 3,
             creatorId: 3,
@@ -65,7 +145,23 @@ export async function materiSeed() {
         where: { id: 6 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi B Pelajaran A Kelas 1B",
             pelajaranId: 3,
             creatorId: 3,
@@ -77,7 +173,23 @@ export async function materiSeed() {
         where: { id: 7 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi A Pelajaran B Kelas 1B",
             pelajaranId: 4,
             creatorId: 3,
@@ -89,7 +201,23 @@ export async function materiSeed() {
         where: { id: 8 },
         update: {},
         create: {
-            file_url: ['https://example.com/file1.pdf'],
+            files: [
+                {
+                    "fileName": "3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "fileUrl": "http://localhost:6948/public/materi/documents/3d0aace8-25cc-47ae-887b-8ebe06622e42.pdf",
+                    "originalName": "05-03-2020-09.54.01.pdf"
+                },
+                {
+                    "fileName": "61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "fileUrl": "http://localhost:6948/public/materi/videos/61f4442d-d592-41de-af3d-0a42e24082cd.mp4",
+                    "originalName": "720_30_4.04_Mar162020_01.mp4"
+                },
+                {
+                    "fileName": "cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "fileUrl": "http://localhost:6948/public/materi/images/cea91c2e-1f10-4009-ad13-012bf19588a5.jpg",
+                    "originalName": "20200223_115237.jpg"
+                }
+            ],
             nama_materi: "Materi B Pelajaran B Kelas 1B",
             pelajaranId: 4,
             creatorId: 3,

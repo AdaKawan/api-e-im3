@@ -1,14 +1,17 @@
 import { BadRequestException } from '@nestjs/common';
 import * as path from 'path';
+import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs'
+import FileData from '../types/FileData';
 
-export const validateAndUpdateFile = async (
-  file_url: string,
+export const validateAndUpdateFiles = async (
+  oldFiles: FileData[],
   routeFolder: string,
-  file: Express.Multer.File,
+  newFiles: Express.Multer.File[],
 ) => {
-  if (!file) throw new BadRequestException('File wajib diupload');
+  if (!newFiles || newFiles.length === 0) {
+    throw new BadRequestException('File wajib diupload');
+  }
 
   const fileDocumentExtensions = ['.pdf', '.docx', '.doc', '.mp4'];
   const videoExtensions = [
@@ -30,29 +33,61 @@ export const validateAndUpdateFile = async (
     ".dnxhr",
     ".dnxhd"
   ];
-  const imageExtensions = ['.jpg', '.png']
+  const imageExtensions = ['.jpg', '.png'];
 
-  const ext = path.extname(file.originalname).toLowerCase();
   const allowedExtensions = [
     ...fileDocumentExtensions,
     ...videoExtensions,
     ...imageExtensions
   ];
 
-  if (!allowedExtensions.includes(ext)) {
-    throw new BadRequestException(
-      `File dengan ekstensi ${ext} tidak diizinkan.`,
-    );
+  if (oldFiles && oldFiles.length > 0) {
+    for (const oldFile of oldFiles) {
+      const oldFilePath = path.join(__dirname, '..', '..', '..', 'public', oldFile.fileUrl.replace('http://localhost:6948/public/', ''));
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
   }
 
-  // await del(file_url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+  const uploadedFiles = [];
 
-  const uniqueSuffix = uuidv4();
-  const newFileName = `${uniqueSuffix}${ext}`;
-  const folder = ext === '.pdf' ? 'pdf' : 'doc';
+  for (const newFile of newFiles) {
+    const ext = path.extname(newFile.originalname).toLowerCase();
 
-  const uploadPathPdf = path.join(__dirname, '..', '..', '..', 'public', '${routeFolder}', '${folder}', newFileName);
-  fs.writeFileSync(uploadPathPdf, file.buffer);
+    if (!allowedExtensions.includes(ext)) {
+      throw new BadRequestException(`File dengan ekstensi ${ext} tidak diizinkan.`);
+    }
 
-  // return { fileName: newFileName, fileUrl: url };
+    const uniqueSuffix = uuidv4();
+    const newFileName = `${uniqueSuffix}${ext}`;
+
+    let folder = '';
+    if (fileDocumentExtensions.includes(ext)) {
+      folder = 'documents';
+    } else if (videoExtensions.includes(ext)) {
+      folder = 'videos';
+    } else if (imageExtensions.includes(ext)) {
+      folder = 'images';
+    }
+
+    const uploadPath = path.join(__dirname, '..', '..', '..', 'public', routeFolder, folder);
+
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    const newFilePath = path.join(uploadPath, newFileName);
+    fs.writeFileSync(newFilePath, newFile.buffer);
+
+    const fileUrl = `http://localhost:6948/public/${routeFolder}/${folder}/${newFileName}`;
+
+    uploadedFiles.push({
+      fileName: newFileName,
+      fileUrl,
+      originalName: newFile.originalname
+    });
+  }
+
+  return uploadedFiles;
 };

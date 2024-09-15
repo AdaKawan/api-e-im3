@@ -14,6 +14,7 @@ import {
   BadRequestException,
   UseGuards,
   ForbiddenException,
+  UploadedFiles,
 } from '@nestjs/common';
 import { MateriService } from './materi.service';
 import { CreateMateriDto } from './dto/create-materi.dto';
@@ -21,7 +22,7 @@ import { UpdateMateriDto } from './dto/update-materi.dto';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { del } from '@vercel/blob';
 import { CreateMateriResponseDto } from './dto/create-materi-response.dto';
 import { FindAllMateriResponseDto } from './dto/find-all-materi-response.dto';
@@ -32,9 +33,12 @@ import { Roles } from 'src/common/anotations/roles';
 import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
 import { RoleGuard } from 'src/common/guards/roles.guard';
 import { PelajaranService } from 'src/pelajaran/pelajaran.service';
-import { validateAndUploadFile } from 'src/common/utils/validate-upload-file';
-import { validateAndUpdateFile } from 'src/common/utils/validate-update-file';
+import { validateAndUploadFiles } from 'src/common/utils/validate-upload-file';
+import { validateAndUpdateFiles } from 'src/common/utils/validate-update-file';
 import { AuthGuard } from 'src/common/guards/auth.guard';
+import { FileCountInterceptor } from 'src/common/utils/FileCountInterceptor';
+import FileData from 'src/common/types/FileData';
+import { deleteManyFiles } from 'src/common/utils/deleteFiles';
 
 @UseGuards(AuthGuard)
 @Controller('materi')
@@ -48,6 +52,10 @@ export class MateriController {
   @Post('create')
   @Roles('admin', 'guru')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseInterceptors(
+    FilesInterceptor('files', 11),
+    FileCountInterceptor
+  )
   @ApiOperation({ summary: 'Create Materi' })
   @ApiConsumes('multipart/form-data')
   async create(
@@ -57,30 +65,10 @@ export class MateriController {
   ) {
     const userId = req['user'].sub;
     const role = req['role'];
+    const files = req['files'] as Express.Multer.File[];
 
-    // if (role === 'admin') {
-    //   const { fileName, fileUrl } = await validateAndUploadFile('materi', file);
-    //   createMateriDto.file = fileName;
-    //   createMateriDto.file_url = fileUrl;
-    // } else {
-    //   const pelajaran = await this.pelajaranService.findOneFilteredWithInclude({
-    //     where: {
-    //       id: createMateriDto.pelajaranId,
-    //       creatorId: userId,
-    //     },
-    //     include: {
-    //       kelas: true,
-    //     },
-    //   });
-
-    //   if (!pelajaran) throw new ForbiddenException('Akses terlarang');
-
-    //   const { fileName, fileUrl } = await validateAndUploadFile('materi', file);
-    //   createMateriDto.file = fileName;
-    //   createMateriDto.file_url = fileUrl;
-    // }
-
-    const materi = await this.materiService.create(userId, createMateriDto);
+    const fileNameAndUrl = await validateAndUploadFiles("materi", files)
+    const materi = await this.materiService.create(userId, createMateriDto, fileNameAndUrl);
 
     return res.status(201).json({
       status: 'success',
@@ -166,6 +154,10 @@ export class MateriController {
   @Patch('update/:id')
   @Roles('admin', 'guru')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseInterceptors(
+    FilesInterceptor('files', 11),
+    FileCountInterceptor
+  )
   @ApiOperation({ summary: 'Update Materi' })
   @ApiConsumes('multipart/form-data')
   async update(
@@ -176,6 +168,8 @@ export class MateriController {
   ) {
     const userId = req['user'].sub;
     const role = req['role'];
+    const files = req['files'] as Express.Multer.File[];
+
     const materi =
       role === 'admin'
         ? await this.materiService.findOne(id)
@@ -190,10 +184,7 @@ export class MateriController {
             creatorId: true,
             nama_materi: true,
             isi_materi: true,
-            // file: true,
-            file_url: true,
-            // yt_link: true,
-            // file_link: true,
+            files: true,
             createdAt: true,
             updatedAt: true,
             pelajaran: true,
@@ -202,18 +193,40 @@ export class MateriController {
 
     if (!materi) throw new NotFoundException('Materi tidak ditemukan');
 
-    // const { fileName, fileUrl } = await validateAndUpdateFile(
-    //   materi.file_url,
-    //   'materi',
-    //   file,
-    // );
+    const oldFiles: FileData[] = (materi.files as unknown as any[]).map((file) => {
+      if (typeof file === 'object' && 'fileUrl' in file && 'fileName' in file && 'originalName' in file) {
+        return file as FileData;
+      } else {
+        throw new BadRequestException('Invalid file data structure');
+      }
+    });
 
-    // updateMateriDto.file_url = fileUrl;
-    // updateMateriDto.file = fileName;
+    let uploadedFiles = [];
+    if (files && files.length > 0) {
+      try {
+        uploadedFiles = await validateAndUpdateFiles(
+          oldFiles,
+          'materi',
+          files
+        );
+      } catch (error) {
+        throw new BadRequestException(`Gagal mengunggah file: ${error.message}`);
+      }
+    }
+
+    let newFiles = [];
+    if (uploadedFiles.length > 0) {
+      newFiles = uploadedFiles.map((file) => ({
+        fileUrl: file.fileUrl,
+        fileName: file.fileName,
+        originalName: file.originalName,
+      }));
+    }
 
     const materiUpdate = await this.materiService.update({
       where: { id },
       data: updateMateriDto,
+      files: newFiles
     });
 
     return res.status(200).json({
@@ -234,6 +247,7 @@ export class MateriController {
   ) {
     const userId = req['user'].sub;
     const role = req['role'];
+
     const materi =
       role === 'admin'
         ? await this.materiService.findOne(id)
@@ -248,10 +262,7 @@ export class MateriController {
             creatorId: true,
             nama_materi: true,
             isi_materi: true,
-            // file: true,
-            file_url: true,
-            // yt_link: true,
-            // file_link: true,
+            files: true,
             createdAt: true,
             updatedAt: true,
             pelajaran: true,
@@ -260,23 +271,27 @@ export class MateriController {
 
     if (!materi) throw new NotFoundException('Materi tidak ditemukan');
 
-    await del(materi.file_url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+    const oldFiles: FileData[] = (materi.files as unknown as any[]).map((file) => {
+      if (typeof file === 'object' && 'fileUrl' in file && 'fileName' in file && 'originalName' in file) {
+        return file as FileData;
+      } else {
+        throw new BadRequestException('Invalid file data structure');
+      }
+    });
+
+    if (oldFiles && oldFiles.length > 0) {
+      try {
+        await deleteManyFiles(oldFiles, 'materi');
+      } catch (error) {
+        throw new BadRequestException(`Gagal menghapus file: ${error.message}`);
+      }
+    }
 
     await this.materiService.delete({ id });
 
-    // const oldExt = path.extname(materi.file).toLowerCase()
-
-    // if (oldExt === '.doc' || oldExt === '.docx') {
-    //   const oldFileDocPath = `./public/materi/doc/${materi.file}`
-    //   fs.unlinkSync(oldFileDocPath);
-    // } else if (oldExt === '.pdf') {
-    //   const oldFilePdfPath = `./public/materi/pdf/${materi.file}`
-    //   fs.unlinkSync(oldFilePdfPath);
-    // }
-
     return res.status(200).json({
       status: 'success',
-      message: 'Berhasil menghapus materi',
+      message: 'Berhasil menghapus materi dan file terkait',
     });
   }
 }
