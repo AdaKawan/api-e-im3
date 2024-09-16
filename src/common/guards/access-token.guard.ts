@@ -4,11 +4,15 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(
+    private readonly jwtService: JwtService,
+    private configService: ConfigService
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -18,9 +22,11 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('No token provided');
     }
 
+    const accessTokenEnv = this.configService.get<string>('accessToken');
+
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.ACCESS_TOKEN,
+        secret: accessTokenEnv,
       });
       request.user = payload;
       return true;
