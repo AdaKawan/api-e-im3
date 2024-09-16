@@ -242,13 +242,20 @@ export class UserController {
   async toggleActiveStatus(
     @Param('id') id: number,
     @Body() updateIsActiveDto: UpdateIsActiveDto,
+    @Res() res: Response
   ) {
     const user = await this.userService.findOne({ id });
     if (!user) {
       throw new NotFoundException('Pengguna tidak ditemukan.');
     }
 
-    return this.userService.toggleActiveStatus(id, updateIsActiveDto.isActive);
+    const settIsActiove = await this.userService.toggleActiveStatus(id, updateIsActiveDto.isActive);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User berhasil aktif.',
+      user: JSON.parse(JSON.stringify(settIsActiove, BigIntToJSON)),
+    });
   }
 
   @Roles('admin')
