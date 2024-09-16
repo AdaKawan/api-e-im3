@@ -12,11 +12,13 @@ import { NilaiModule } from './nilai/nilai.module';
 import { UserOnMateriModule } from './user-on-materi/user-on-materi.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
 import { AuthModule } from './auth/auth.module';
+import configuration from './common/config/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [configuration],
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),

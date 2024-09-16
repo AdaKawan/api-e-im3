@@ -39,6 +39,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { FileCountInterceptor } from 'src/common/utils/FileCountInterceptor';
 import FileData from 'src/common/types/FileData';
 import { deleteManyFiles } from 'src/common/utils/deleteFiles';
+import { ConfigService } from '@nestjs/config';
 
 @UseGuards(AuthGuard)
 @Controller('materi')
@@ -47,6 +48,7 @@ export class MateriController {
   constructor(
     private readonly materiService: MateriService,
     private readonly pelajaranService: PelajaranService,
+    private configService: ConfigService
   ) { }
 
   @Post('create')
@@ -67,7 +69,7 @@ export class MateriController {
     const role = req['role'];
     const files = req['files'] as Express.Multer.File[];
 
-    const fileNameAndUrl = await validateAndUploadFiles("materi", files)
+    const fileNameAndUrl = await validateAndUploadFiles("materi", files, this.configService)
     const materi = await this.materiService.create(userId, createMateriDto, fileNameAndUrl);
 
     return res.status(201).json({
@@ -207,7 +209,8 @@ export class MateriController {
         uploadedFiles = await validateAndUpdateFiles(
           oldFiles,
           'materi',
-          files
+          files,
+          this.configService
         );
       } catch (error) {
         throw new BadRequestException(`Gagal mengunggah file: ${error.message}`);

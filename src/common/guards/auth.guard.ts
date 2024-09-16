@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
@@ -14,7 +15,8 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
-  ) {}
+    private configService: ConfigService
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -40,6 +42,8 @@ export class AuthGuard implements CanActivate {
 
       const jtiAccessToken = uuidV4();
 
+      const accessTokenEnv = this.configService.get<string>('accessToken');
+
       request.accessToken = await this.jwtService.signAsync(
         {
           sub,
@@ -49,7 +53,7 @@ export class AuthGuard implements CanActivate {
           jti: jtiAccessToken,
         },
         {
-          secret: process.env.ACCESS_TOKEN,
+          secret: accessTokenEnv,
           expiresIn: '25s',
         },
       );
