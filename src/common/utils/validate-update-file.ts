@@ -3,11 +3,13 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import FileData from '../types/FileData';
+import { ConfigService } from '@nestjs/config';
 
 export const validateAndUpdateFiles = async (
   oldFiles: FileData[],
   routeFolder: string,
   newFiles: Express.Multer.File[],
+  configService: ConfigService,
 ) => {
   if (!newFiles || newFiles.length === 0) {
     throw new BadRequestException('File wajib diupload');
@@ -80,7 +82,8 @@ export const validateAndUpdateFiles = async (
     const newFilePath = path.join(uploadPath, newFileName);
     fs.writeFileSync(newFilePath, newFile.buffer);
 
-    const fileUrl = `http://localhost:6948/public/${routeFolder}/${folder}/${newFileName}`;
+    const baseUrl = configService.get<string>('baseUrl');
+    const fileUrl = `${baseUrl}/public/${routeFolder}/${folder}/${newFileName}`;
 
     uploadedFiles.push({
       fileName: newFileName,
