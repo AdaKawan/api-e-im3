@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "message": "Berhasil menambahkan data",
+  "user": {
+    "id": 8,
+    "nama_lengkap": "Betania Halimah, S.Sos",
+    "email": "betania_halimah@gmail.co.id",
+    "username": "betania_halimah,",
+    "roleId": 2,
+    "asal_sekolah": "smp negeri 1 ngariboyo",
+    "isActive": true,
+    "createdAt": "2024-09-23T14:59:21.833Z",
+    "updatedAt": "2024-09-23T14:59:21.833Z"
+  }
+}

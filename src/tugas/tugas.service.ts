@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTugasDto } from './dto/create-tugas.dto';
-import { UpdateTugasDto } from './dto/update-tugas.dto';
+import { CreateTugasDto } from 'src/tugas/dto/create-tugas.dto';
+import { UpdateTugasDto } from 'src/tugas/dto/update-tugas.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, Tugas } from '@prisma/client';
 

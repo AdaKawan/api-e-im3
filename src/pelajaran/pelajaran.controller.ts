@@ -10,11 +10,13 @@ import {
   NotFoundException,
   UseGuards,
   Req,
+  Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { PelajaranService } from './pelajaran.service';
-import { CreatePelajaranDto } from './dto/create-pelajaran.dto';
-import { UpdatePelajaranDto } from './dto/update-pelajaran.dto';
+import { PelajaranService } from 'src/pelajaran/pelajaran.service';
+import { CreatePelajaranDto } from 'src/pelajaran/dto/create-pelajaran.dto';
+import { UpdatePelajaranDto } from 'src/pelajaran/dto/update-pelajaran.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
 import { AuthGuard } from 'src/common/guards/auth.guard';
@@ -22,6 +24,7 @@ import { Roles } from 'src/common/anotations/roles';
 import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
 import { RoleGuard } from 'src/common/guards/roles.guard';
 import { Prisma } from '@prisma/client';
+import { success } from 'src/common/utils/responseHandler';
 
 @UseGuards(AuthGuard)
 @Controller('pelajaran')
@@ -104,6 +107,35 @@ export class PelajaranController {
       pelajaran: JSON.parse(JSON.stringify(pelajaran, BigIntToJSON)),
     });
   }
+
+  @Get('get-by-sekolah-jenjang')
+  @ApiOperation({ summary: 'Get All Pelajaran sekolah? jenjang?' })
+  @Roles('admin', 'guru', 'siswa')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async findBySekolahAndJenjang(
+    @Query('sekolah') sekolah: string,
+    @Query('jenjang') jenjang: number,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    if (!sekolah) throw new BadRequestException('Tolong masukkan query asal sekolah')
+    if (!jenjang) throw new BadRequestException('Tolong masukkan query jenjang kelas')
+
+    const asalSekolah = sekolah
+    const kelas = Number(jenjang)
+
+    const pelajaran = await this.pelajaranService.findManyBySekolahAndJenjang({
+      where: {
+        jenjang_kelas: kelas,
+        asal_sekolah: asalSekolah
+      }
+    })
+
+    return res.status(200).json(success("Berhasil mengambil data pelajaran", {
+      pelajaran: JSON.parse(JSON.stringify(pelajaran, BigIntToJSON))
+    }))
+  }
+
 
   @Patch('update/:id')
   @ApiOperation({ summary: 'Update Pelajaran' })

@@ -12,9 +12,9 @@ import {
   Req,
   ForbiddenException,
 } from '@nestjs/common';
-import { NilaiService } from './nilai.service';
-import { CreateNilaiDto } from './dto/create-nilai.dto';
-import { UpdateNilaiDto } from './dto/update-nilai.dto';
+import { NilaiService } from 'src/nilai/nilai.service';
+import { CreateNilaiDto } from 'src/nilai/dto/create-nilai.dto';
+import { UpdateNilaiDto } from 'src/nilai/dto/update-nilai.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
 import { Request, Response } from 'express';
@@ -33,7 +33,7 @@ export class NilaiController {
     private readonly nilaiService: NilaiService,
     private readonly pengumpulanService: PengumpulanService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   @Post('create')
   @Roles('admin', 'guru')
@@ -55,8 +55,6 @@ export class NilaiController {
         tugas: true,
       },
     });
-
-    console.log(pengumpulan);
 
     if (role !== 'admin') {
       if (Number(pengumpulan.tugas.creatorId) !== userId)
@@ -83,64 +81,64 @@ export class NilaiController {
     const nilai =
       role === 'admin'
         ? await this.nilaiService.findManyFilteredWithSelect({
-            select: {
-              id: true,
-              pengumpulanId: true,
-              nilai: true,
-              createdAt: true,
-              updatedAt: true,
-              pengumpulan: {
-                select: {
-                  tugasId: true,
-                  pengumpul: {
-                    select: {
-                      nama_lengkap: true,
-                    },
+          select: {
+            id: true,
+            pengumpulanId: true,
+            nilai: true,
+            createdAt: true,
+            updatedAt: true,
+            pengumpulan: {
+              select: {
+                tugasId: true,
+                pengumpul: {
+                  select: {
+                    nama_lengkap: true,
                   },
-                  tugas: {
-                    select: {
-                      nama_tugas: true,
-                      materiId: true,
-                      materi: {
-                        select: {
-                          nama_materi: true,
-                        },
+                },
+                tugas: {
+                  select: {
+                    nama_tugas: true,
+                    materiId: true,
+                    materi: {
+                      select: {
+                        nama_materi: true,
                       },
                     },
                   },
                 },
               },
             },
-          })
+          },
+        })
         : await this.pengumpulanService.findManyFilteredWithSelect({
-            where: {
-              tugas: {
-                creatorId: userId,
+          where: {
+            tugas: {
+              creatorId: userId,
+            },
+          },
+          select: {
+            id: true,
+            nilai: true,
+            createdAt: true,
+            updatedAt: true,
+            pengumpul: {
+              select: {
+                nama_lengkap: true,
               },
             },
-            select: {
-              id: true,
-              nilai: true,
-              createdAt: true,
-              updatedAt: true,
-              pengumpul: {
-                select: {
-                  nama_lengkap: true,
-                },
-              },
-              tugas: {
-                select: {
-                  nama_tugas: true,
-                  materiId: true,
-                  materi: {
-                    select: {
-                      nama_materi: true,
-                    },
+            tugas: {
+              select: {
+                nama_tugas: true,
+                materiId: true,
+                materi: {
+                  select: {
+                    nama_materi: true,
                   },
                 },
               },
             },
-          });
+          },
+        });
 
     return res.status(200).json({
       status: 'success',

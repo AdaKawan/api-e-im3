@@ -11,30 +11,30 @@ export const validateAndUploadFiles = async (
 ) => {
   const fileDocumentExtensions = ['.pdf', '.docx', '.doc'];
   const videoExtensions = [
-    ".mp4",
-    ".mov",
-    ".avi",
-    ".wmv",
-    ".flv",
-    ".f4v",
-    ".mkv",
-    ".webm",
-    ".avchd",
-    ".mpeg",
-    ".3gp",
-    ".3g2",
-    ".ogv",
-    ".m4v",
-    ".prores",
-    ".dnxhr",
-    ".dnxhd"
+    '.mp4',
+    '.mov',
+    '.avi',
+    '.wmv',
+    '.flv',
+    '.f4v',
+    '.mkv',
+    '.webm',
+    '.avchd',
+    '.mpeg',
+    '.3gp',
+    '.3g2',
+    '.ogv',
+    '.m4v',
+    '.prores',
+    '.dnxhr',
+    '.dnxhd',
   ];
   const imageExtensions = ['.jpg', '.png'];
 
   const allowedExtensions = [
     ...fileDocumentExtensions,
     ...videoExtensions,
-    ...imageExtensions
+    ...imageExtensions,
   ];
 
   const uploadedFiles = [];
@@ -60,7 +60,15 @@ export const validateAndUploadFiles = async (
       folder = 'images';
     }
 
-    const uploadPath = path.join(__dirname, '..', '..', '..', 'public', `${routeFolder}`, `${folder}`);
+    const uploadPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'public',
+      `${routeFolder}`,
+      `${folder}`,
+    );
 
     // Ensure the directory exists
     if (!fs.existsSync(uploadPath)) {
@@ -75,7 +83,7 @@ export const validateAndUploadFiles = async (
     uploadedFiles.push({
       fileName: newFileName,
       fileUrl,
-      originalName: file.originalname
+      originalName: file.originalname,
     });
   }
 

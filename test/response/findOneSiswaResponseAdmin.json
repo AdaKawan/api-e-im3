@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "message": "Berhasil mengambil data",
+  "siswa": {
+    "id": 4,
+    "nama_lengkap": "Siswa Kelas 1A",
+    "username": "siswaKelas1A",
+    "email": "siswa_kelas_1A@gmail.com",
+    "isActive": true,
+    "materi": [],
+    "pengumpulan": [],
+    "createdAt": "2024-09-23T14:58:26.414Z",
+    "updatedAt": "2024-09-23T14:58:26.414Z"
+  }
+}

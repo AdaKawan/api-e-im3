@@ -17,12 +17,12 @@ export class CreatePengumpulanDto {
     example: [
       {
         id: 5,
-        answer: 'H2O'
+        answer: 'H2O',
       },
       {
         id: 6,
-        answer: 'Canberra'
-      }
+        answer: 'Canberra',
+      },
     ],
   })
   @IsNotEmpty()

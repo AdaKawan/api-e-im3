@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "message": "Berhasil login",
+  "user": {
+    "id": 1,
+    "nama_lengkap": "Admin",
+    "role": "admin",
+    "asal_sekolah": null,
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImp0aSI6ImRhOTFjMzY1LWQ2Y2YtNDAyYS04MzdkLTdiOTI2OGY0MTRmNiIsImlhdCI6MTcyNzEwMzU0NCwiZXhwIjoxNzI3NzA4MzQ0fQ.Vv2zfxFW34LUSvMDzYy5wD6HHOvBYEE5Qy27RoH065U"
+  }
+}

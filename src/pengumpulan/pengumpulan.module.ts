@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { PengumpulanService } from './pengumpulan.service';
-import { PengumpulanController } from './pengumpulan.controller';
+import { PengumpulanService } from 'src/pengumpulan/pengumpulan.service';
+import { PengumpulanController } from 'src/pengumpulan/pengumpulan.controller';
 
 @Global()
 @Module({

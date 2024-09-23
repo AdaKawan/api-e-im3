@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "message": "Berhasil",
+  "user": {
+    "id": 1,
+    "nama_lengkap": "Admin",
+    "role": "admin",
+    "asal_sekolah": null
+  }
+}
