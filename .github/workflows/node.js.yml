@@ -4,8 +4,6 @@
 name: Unit Test and E2E Test
 
 on:
-  push:
-    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
 
@@ -14,16 +12,16 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: ${{ vars.DATABASE_URL }}
-      DIRECT_URL: ${{ vars.DIRECT_URL }}
-      DEV_REFRESH_TOKEN: ${{ vars.DEV_REFRESH_TOKEN }}
-      PROD_REFRESH_TOKEN: ${{ vars.PROD_REFRESH_TOKEN }}
-      DEV_ACCESS_TOKEN: ${{ vars.DEV_ACCESS_TOKEN }}
-      PROD_ACCESS_TOKEN: ${{ vars.PROD_ACCESS_TOKEN }}
-      DEV_BASE_URL: ${{ vars.DEV_BASE_URL }}
-      PROD_BASE_URL: ${{ vars.PROD_BASE_URL }}
-      SWAGGER_USER: ${{ vars.SWAGGER_USER }}
-      SWAGGER_PASSWORD: ${{ vars.SWAGGER_PASSWORD }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      DEV_REFRESH_TOKEN: ${{ secrets.DEV_REFRESH_TOKEN }}
+      PROD_REFRESH_TOKEN: ${{ secrets.PROD_REFRESH_TOKEN }}
+      DEV_ACCESS_TOKEN: ${{ secrets.DEV_ACCESS_TOKEN }}
+      PROD_ACCESS_TOKEN: ${{ secrets.PROD_ACCESS_TOKEN }}
+      DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
+      PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+      SWAGGER_USER: ${{ secrets.SWAGGER_USER }}
+      SWAGGER_PASSWORD: ${{ secrets.SWAGGER_PASSWORD }}
 
     strategy:
       matrix:
