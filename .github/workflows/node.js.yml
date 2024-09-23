@@ -62,7 +62,10 @@ jobs:
         path: coverage/clover.xml
 
     - name: Run E2E Tests
-      run: npm run test:e2e
+      run: |
+        jest --testPathPattern=01-auth-controller.e2e-spec.ts
+        jest --testPathPattern=02-user-controller-admin.e2e-spec.ts
+        jest --testPathPattern=03-auth-new-user.e2e-spec.ts
       env:
         CI: true
 
