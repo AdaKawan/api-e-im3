@@ -13,7 +13,17 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    environment: api-env
+    env:
+      DATABASE_URL: ${{ vars.DATABASE_URL }}
+      DIRECT_URL: ${{ vars.DIRECT_URL }}
+      DEV_REFRESH_TOKEN: ${{ vars.DEV_REFRESH_TOKEN }}
+      PROD_REFRESH_TOKEN: ${{ vars.PROD_REFRESH_TOKEN }}
+      DEV_ACCESS_TOKEN: ${{ vars.DEV_ACCESS_TOKEN }}
+      PROD_ACCESS_TOKEN: ${{ vars.PROD_ACCESS_TOKEN }}
+      DEV_BASE_URL: ${{ vars.DEV_BASE_URL }}
+      PROD_BASE_URL: ${{ vars.PROD_BASE_URL }}
+      SWAGGER_USER: ${{ vars.SWAGGER_USER }}
+      SWAGGER_PASSWORD: ${{ vars.SWAGGER_PASSWORD }}
 
     strategy:
       matrix:
