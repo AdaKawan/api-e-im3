@@ -41,6 +41,12 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Truncate All Tabels
+      run: npx prisma db execute --file=prisma/truncate-data.sql
+
+    - name: Seed Database
+      run: npx prisma db seed
+
     - name: Build project
       run: npm run build --if-present
 
