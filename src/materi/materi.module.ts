@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { MateriService } from './materi.service';
-import { MateriController } from './materi.controller';
+import { MateriService } from 'src/materi/materi.service';
+import { MateriController } from 'src/materi/materi.controller';
 
 @Global()
 @Module({

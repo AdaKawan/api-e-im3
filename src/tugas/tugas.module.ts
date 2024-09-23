@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { TugasService } from './tugas.service';
-import { TugasController } from './tugas.controller';
+import { TugasService } from 'src/tugas/tugas.service';
+import { TugasController } from 'src/tugas/tugas.controller';
 
 @Global()
 @Module({

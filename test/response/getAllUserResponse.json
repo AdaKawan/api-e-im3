@@ -1,0 +1,97 @@
+{
+  "status": "success",
+  "message": "Berhasil mengambil data",
+  "users": [
+    {
+      "id": 2,
+      "nama_lengkap": "Guru SMP Negeri 2 Barat",
+      "email": "guru_smp_negeri_2_baratA@gmail.com",
+      "username": "guruSmpNegeri2Barat",
+      "isActive": true,
+      "asal_sekolah": "smp negeri 2 barat",
+      "role": {
+        "role": "guru"
+      },
+      "createdAt": "2024-09-23T14:58:25.760Z",
+      "updatedAt": "2024-09-23T14:58:25.760Z"
+    },
+    {
+      "id": 3,
+      "nama_lengkap": "Guru SMP Negeri 1 Lembeyan",
+      "email": "guru_smp_negeri_1_lembeyan@gmail.com",
+      "username": "guruSmpNegeri1Lembeyan",
+      "isActive": true,
+      "asal_sekolah": "smp negeri 1 lembeyan",
+      "role": {
+        "role": "guru"
+      },
+      "createdAt": "2024-09-23T14:58:26.093Z",
+      "updatedAt": "2024-09-23T14:58:26.093Z"
+    },
+    {
+      "id": 4,
+      "nama_lengkap": "Siswa Kelas 1A",
+      "email": "siswa_kelas_1A@gmail.com",
+      "username": "siswaKelas1A",
+      "isActive": true,
+      "asal_sekolah": null,
+      "role": {
+        "role": "siswa"
+      },
+      "createdAt": "2024-09-23T14:58:26.414Z",
+      "updatedAt": "2024-09-23T14:58:26.414Z"
+    },
+    {
+      "id": 5,
+      "nama_lengkap": "Siswa Kelas 1B",
+      "email": "siswa_kelas_1B@gmail.com",
+      "username": "siswaKelas1B",
+      "isActive": true,
+      "asal_sekolah": null,
+      "role": {
+        "role": "siswa"
+      },
+      "createdAt": "2024-09-23T14:58:26.747Z",
+      "updatedAt": "2024-09-23T14:58:26.747Z"
+    },
+    {
+      "id": 6,
+      "nama_lengkap": "Kamal Januar, S.Kom",
+      "email": "kamal_januar55@gmail.co.id",
+      "username": "kamal.januar,17",
+      "isActive": true,
+      "asal_sekolah": "smp negeri 2 parang",
+      "role": {
+        "role": "guru"
+      },
+      "createdAt": "2024-09-23T14:59:06.642Z",
+      "updatedAt": "2024-09-23T14:59:17.707Z"
+    },
+    {
+      "id": 7,
+      "nama_lengkap": "Prabowo Upik",
+      "email": "prabowo.upik@gmail.co.id",
+      "username": "prabowo_upik77",
+      "isActive": true,
+      "asal_sekolah": null,
+      "role": {
+        "role": "siswa"
+      },
+      "createdAt": "2024-09-23T14:59:07.163Z",
+      "updatedAt": "2024-09-23T14:59:18.392Z"
+    },
+    {
+      "id": 8,
+      "nama_lengkap": "Betania Halimah, S.Sos",
+      "email": "betania_halimah@gmail.co.id",
+      "username": "betania_halimah,",
+      "isActive": true,
+      "asal_sekolah": "smp negeri 1 ngariboyo",
+      "role": {
+        "role": "guru"
+      },
+      "createdAt": "2024-09-23T14:59:21.833Z",
+      "updatedAt": "2024-09-23T14:59:21.833Z"
+    }
+  ]
+}

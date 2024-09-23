@@ -1,19 +1,15 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidV4 } from 'uuid';
 import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { Role, User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
-    private userService: UserService,
     private refresTokenService: RefreshTokenService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async login(user: User & { role: Role }) {
     const jti = uuidV4();
@@ -47,7 +43,6 @@ export class AuthService {
       role: string;
     },
     oldJti: string,
-    currentTime: number,
   ) {
     try {
       const payload = {
@@ -60,7 +55,7 @@ export class AuthService {
 
       const newJti = uuidV4();
 
-      await this.refresTokenService.updateUsedJti(oldJti, newJti, currentTime);
+      await this.refresTokenService.updateUsedJti(oldJti, newJti);
 
       payload.jti = newJti;
 

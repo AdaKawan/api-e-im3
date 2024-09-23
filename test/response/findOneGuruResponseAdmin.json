@@ -1,0 +1,28 @@
+{
+  "status": "success",
+  "message": "Berhasil mengambil data",
+  "guru": {
+    "id": 2,
+    "nama_lengkap": "Guru SMP Negeri 2 Barat",
+    "username": "guruSmpNegeri2Barat",
+    "email": "guru_smp_negeri_2_baratA@gmail.com",
+    "isActive": true,
+    "asal_sekolah": "smp negeri 2 barat",
+    "role": {
+      "id": 2,
+      "role": "guru"
+    },
+    "createdPelajaran": [
+      {
+        "nama_pelajaran": "Pelajaran A SMP Negeri 2 Barat Kelas 1"
+      },
+      {
+        "nama_pelajaran": "Pelajaran B Kelas 2"
+      }
+    ],
+    "createdMateri": [],
+    "createdTugas": [],
+    "createdAt": "2024-09-23T14:58:25.760Z",
+    "updatedAt": "2024-09-23T14:58:25.760Z"
+  }
+}

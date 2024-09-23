@@ -1,11 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { GuruData } from 'src/common/types/user.types';
 import * as argon2 from 'argon2';
-import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { UpdateUserProfileDto } from 'src/user/dto/update-user-profile.dto';
 
 @Injectable()
 export class UserService {
@@ -21,10 +21,12 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
-    const { confPassword, ...data } = createUserDto;
-    data.password = await argon2.hash(createUserDto.password);
+    delete createUserDto.confPassword;
+
+    createUserDto.password = await argon2.hash(createUserDto.password);
+
     return this.prisma.user.create({
-      data,
+      data: createUserDto,
     });
   }
 
@@ -110,20 +112,27 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const { confPassword, ...data } = updateUserDto;
-    data.password = await argon2.hash(updateUserDto.password);
+    delete updateUserDto.confPassword;
+
+    updateUserDto.password = await argon2.hash(updateUserDto.password);
+
     return this.prisma.user.update({
       where: { id },
-      data,
+      data: updateUserDto,
     });
   }
 
-  async updateUserProfile(id: number, updateUserProfileDto: UpdateUserProfileDto): Promise<User> {
-    const { confPassword, ...data } = updateUserProfileDto;
-    data.password = await argon2.hash(updateUserProfileDto.password);
+  async updateUserProfile(
+    id: number,
+    updateUserProfileDto: UpdateUserProfileDto,
+  ): Promise<User> {
+    delete updateUserProfileDto.confPassword;
+    updateUserProfileDto.password = await argon2.hash(
+      updateUserProfileDto.password,
+    );
     return this.prisma.user.update({
       where: { id },
-      data,
+      data: updateUserProfileDto,
     });
   }
 
@@ -163,7 +172,7 @@ export class UserService {
     });
   }
 
-  async findManyStudents(role: string, userId: number) {
+  async findManyStudents(role: string) {
     if (role === 'admin' || role === 'guru') {
       return this.prisma.user.findMany({
         where: {
@@ -171,6 +180,17 @@ export class UserService {
             id: 3,
           },
         },
+        select: {
+          id: true,
+          nama_lengkap: true,
+          email: true,
+          username: true,
+          roleId: true,
+          asal_sekolah: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+        }
       });
     }
 

@@ -5,7 +5,6 @@ import {
   IsNumber,
   IsString,
   IsDate,
-  IsOptional,
   IsArray,
 } from 'class-validator';
 
@@ -32,7 +31,7 @@ export class UpdateTugasDto {
         title: 'Apa simbol kimia untuk air?',
         answer: 'H2O',
         points: 5,
-        content: 'Apa simbol kimia untuk air?'
+        content: 'Apa simbol kimia untuk air?',
       },
       {
         id: 6,
@@ -44,9 +43,9 @@ export class UpdateTugasDto {
           { text: 'Sydney', isCorrect: false },
           { text: 'Melbourne', isCorrect: false },
           { text: 'Canberra', isCorrect: true },
-          { text: 'Brisbane', isCorrect: false }
-        ]
-      }
+          { text: 'Brisbane', isCorrect: false },
+        ],
+      },
     ],
   })
   @IsNotEmpty()

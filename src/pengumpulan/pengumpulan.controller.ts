@@ -6,24 +6,17 @@ import {
   Patch,
   Param,
   Delete,
-  BadRequestException,
   NotFoundException,
   Res,
-  UploadedFile,
-  UseInterceptors,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { PengumpulanService } from './pengumpulan.service';
-import { CreatePengumpulanDto } from './dto/create-pengumpulan.dto';
-import { UpdatePengumpulanDto } from './dto/update-pengumpulan.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { PengumpulanService } from 'src/pengumpulan/pengumpulan.service';
+import { CreatePengumpulanDto } from 'src/pengumpulan/dto/create-pengumpulan.dto';
+import { UpdatePengumpulanDto } from 'src/pengumpulan/dto/update-pengumpulan.dto';
 import { ApiOperation, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
 import { Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import * as path from 'path';
-import { del, put } from '@vercel/blob';
 
 import { Roles } from 'src/common/anotations/roles';
 import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
@@ -35,22 +28,19 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 @ApiTags('Pengumpulan')
 @Controller('pengumpulan')
 export class PengumpulanController {
-  constructor(private readonly pengumpulanService: PengumpulanService) { }
+  constructor(private readonly pengumpulanService: PengumpulanService) {}
 
   @Post('create')
-
   @Roles('admin', 'guru', 'siswa')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Create Pengumpulan' })
   @ApiConsumes('multipart/form-data')
   async create(
-
     @Body() createPengumpulanDto: CreatePengumpulanDto,
     @Res() res: Response,
     @Req() req: Request,
   ) {
     const userId = req['user'].sub;
-    const role = req['role'];
 
     // if (!file) throw new BadRequestException('File wajib diupload');
 
@@ -117,13 +107,11 @@ export class PengumpulanController {
   }
 
   @Patch('update/:id')
-
   @Roles('admin', 'guru', 'siswa')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Update Pengumpulan' })
   @ApiConsumes('multipart/form-data')
   async update(
-
     @Param('id') id: number,
     @Body() updatePengumpulanDto: UpdatePengumpulanDto,
     @Res() res: Response,

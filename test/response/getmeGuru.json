@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "message": "Berhasil mengambil data",
+  "user": {
+    "id": 2,
+    "nama_lengkap": "Guru SMP Negeri 2 Barat",
+    "email": "guru_smp_negeri_2_baratA@gmail.com",
+    "username": "guruSmpNegeri2Barat",
+    "role": {
+      "role": "guru"
+    },
+    "asal_sekolah": "smp negeri 2 barat",
+    "isActive": true,
+    "createdAt": "2024-09-23T14:58:25.760Z",
+    "updatedAt": "2024-09-23T14:58:25.760Z"
+  }
+}

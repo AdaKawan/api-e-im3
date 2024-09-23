@@ -1,47 +1,30 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { AppModule } from 'src/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { PrismaClientExceptionFilter } from './common/exceptions/prisma-client-exception.filter';
-import { BadRequestExceptionFilter } from './common/exceptions/custom-bad-request-exception.filter';
-import { NotFoundExceptionFilter } from './common/exceptions/custom-not-found-exception.filter';
-import { InternalServerErrorExceptionFilter } from './common/exceptions/custom-internal-server-exception.filter';
+import { PrismaClientExceptionFilter } from 'src/common/exceptions/prisma-client-exception.filter';
+import { BadRequestExceptionFilter } from 'src/common/exceptions/custom-bad-request-exception.filter';
+import { NotFoundExceptionFilter } from 'src/common/exceptions/custom-not-found-exception.filter';
+import { InternalServerErrorExceptionFilter } from 'src/common/exceptions/custom-internal-server-exception.filter';
+import { ForbiddenExceptionFilter } from 'src/common/exceptions/custom-forbidden-excepion.filter';
+import { UnauthorizedExceptionFilter } from 'src/common/exceptions/custom-unauthorized-exception.filter';
 import * as cookieParser from 'cookie-parser';
-import { ForbiddenExceptionFilter } from './common/exceptions/custom-forbidden-excepion.filter';
-import { UnauthorizedExceptionFilter } from './common/exceptions/custom-unauthorized-exception.filter';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
-import { FileMiddleware } from './common/middleware/FileMiddleware';
+import { setupSwagger } from './common/config/setupSwagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // app.useStaticAssets(join(__dirname, '..', 'public'), {
-  //   prefix: '/public/',
-  // });
-
-  // app.use('/public/*', new FileMiddleware().use);
+  const { httpAdapter } = app.get(HttpAdapterHost);
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(
-    new PrismaClientExceptionFilter(),
+    new PrismaClientExceptionFilter(httpAdapter),
     new BadRequestExceptionFilter(),
     new NotFoundExceptionFilter(),
     new InternalServerErrorExceptionFilter(),
     new ForbiddenExceptionFilter(),
     new UnauthorizedExceptionFilter(),
   );
-
-  const config = new DocumentBuilder()
-    .addBearerAuth()
-    .setTitle('API E-iM3')
-    .setDescription('API Development Aplikasi E-iM3')
-    .setVersion('1.0')
-    .addServer('https://api-e-im3.vercel.app', 'Production Servel')
-    .addServer('http://localhost:5090', 'Dev Server Port 5090')
-    .addServer('http://localhost:3000', 'Dev Server Port 3000')
-    .addServer('http://localhost:6948', 'Dev Server Port 6948')
-    .build();
 
   app.use(cookieParser());
 
@@ -56,8 +39,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document, { useGlobalPrefix: true });
+  setupSwagger(app)
 
   await app.listen(6948);
 }

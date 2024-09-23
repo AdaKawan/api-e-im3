@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { NilaiService } from './nilai.service';
-import { NilaiController } from './nilai.controller';
+import { NilaiService } from 'src/nilai/nilai.service';
+import { NilaiController } from 'src/nilai/nilai.controller';
 
 @Global()
 @Module({

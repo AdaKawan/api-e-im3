@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "message": "User berhasil aktif",
+  "user": {
+    "id": 7,
+    "nama_lengkap": "Prabowo Upik",
+    "email": "prabowo.upik@gmail.co.id",
+    "username": "prabowo_upik77",
+    "password": "$argon2id$v=19$m=65536,t=3,p=4$bpeSWfM678X+gYPVPY/5wA$5LKAOVPjXZQ8Yoa7BrTEM7P++Yo8hyZuwuIIXh0QzX0",
+    "roleId": 3,
+    "asal_sekolah": null,
+    "isActive": true,
+    "createdAt": "2024-09-23T14:59:07.163Z",
+    "updatedAt": "2024-09-23T14:59:18.392Z"
+  }
+}

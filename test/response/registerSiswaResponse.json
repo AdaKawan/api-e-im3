@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "message": "Pendaftaran sukses mohon tunggu konfirmasi admin",
+  "user": {
+    "id": 7,
+    "nama_lengkap": "Prabowo Upik",
+    "email": "prabowo.upik@gmail.co.id",
+    "username": "prabowo_upik77",
+    "roleId": 3,
+    "asal_sekolah": null,
+    "isActive": false,
+    "createdAt": "2024-09-23T14:59:07.163Z",
+    "updatedAt": "2024-09-23T14:59:07.163Z"
+  }
+}

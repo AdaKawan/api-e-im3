@@ -13,9 +13,9 @@ import {
   Req,
   ForbiddenException,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from 'src/user/user.service';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { Request, Response } from 'express';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -23,8 +23,9 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { Roles } from 'src/common/anotations/roles';
 import { RoleGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
-import { UpdateIsActiveDto } from './dto/update-is-active.dto';
-import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { UpdateIsActiveDto } from 'src/user/dto/update-is-active.dto';
+import { UpdateUserProfileDto } from 'src/user/dto/update-user-profile.dto';
+import { success } from 'src/common/utils/responseHandler';
 
 @Controller('users')
 @UseGuards(AuthGuard)
@@ -51,9 +52,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Get All Siswa' })
   async getAllSiswa(@Res() res: Response, @Req() req: Request) {
-    const userId = req['user'].sub;
     const role = req['role'];
-    const siswa = await this.userService.findManyStudents(role, userId);
+    const siswa = await this.userService.findManyStudents(role);
 
     res.status(200).json({
       status: 'success',
@@ -77,12 +77,12 @@ export class UserController {
 
     const user = await this.userService.create(createUserDto);
 
-    const { password, ...userData } = user;
+    delete user.password;
 
     res.status(201).json({
       status: 'success',
       message: 'Berhasil menambahkan data',
-      user: JSON.parse(JSON.stringify(userData, BigIntToJSON)),
+      user: JSON.parse(JSON.stringify(user, BigIntToJSON)),
     });
   }
 
@@ -172,10 +172,10 @@ export class UserController {
             materiId: true,
             materi: {
               select: {
-                nama_materi: true
-              }
-            }
-          }
+                nama_materi: true,
+              },
+            },
+          },
         },
         pengumpulan: {
           select: {
@@ -183,14 +183,14 @@ export class UserController {
             isi_pengumpulan: true,
             nilai: {
               select: {
-                nilai: true
-              }
-            }
-          }
+                nilai: true,
+              },
+            },
+          },
         },
         createdAt: true,
-        updatedAt: true
-      }
+        updatedAt: true,
+      },
     );
 
     if (!siswa) throw new NotFoundException('Siswa tidak ditemukan');
@@ -227,11 +227,12 @@ export class UserController {
 
     const userUpdate = await this.userService.update(id, updateUserDto);
 
-    const { password, ...data } = userUpdate;
+    delete userUpdate.password;
+
     res.status(200).json({
       status: 'success',
       message: 'Berhasil mengubah data',
-      user: JSON.parse(JSON.stringify(data, BigIntToJSON)),
+      user: JSON.parse(JSON.stringify(userUpdate, BigIntToJSON)),
     });
   }
 
@@ -242,13 +243,21 @@ export class UserController {
   async toggleActiveStatus(
     @Param('id') id: number,
     @Body() updateIsActiveDto: UpdateIsActiveDto,
+    @Res() res: Response,
   ) {
     const user = await this.userService.findOne({ id });
     if (!user) {
       throw new NotFoundException('Pengguna tidak ditemukan.');
     }
 
-    return this.userService.toggleActiveStatus(id, updateIsActiveDto.isActive);
+    const settIsActiove = await this.userService.toggleActiveStatus(
+      id,
+      updateIsActiveDto.isActive,
+    );
+
+    return res.status(200).json(success('User berhasil aktif', {
+      user: JSON.parse(JSON.stringify(settIsActiove, BigIntToJSON))
+    }));
   }
 
   @Roles('admin')
@@ -274,40 +283,40 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'User Get Me' })
   @Get('get-me')
-  async userGetMe(
-    @Req() req: Request,
-    @Res() res: Response
-  ) {
+  async userGetMe(@Req() req: Request, @Res() res: Response) {
     const userId = req['user'].sub;
-    const role = req['role'];
 
-    if (role === 'admin') {
-      const user = this.userService.findOneWithSelectedField(
-        {
-          id: userId
-        },
-        {
-          id: true,
-          nama_lengkap: true,
-          email: true,
-          username: true,
-          role: {
-            select: {
-              role: true
-            }
+    const user = await this.userService.findOneWithSelectedField(
+      {
+        id: userId,
+      },
+      {
+        id: true,
+        nama_lengkap: true,
+        email: true,
+        username: true,
+        role: {
+          select: {
+            role: true,
           },
-          asal_sekolah: true,
-          isActive: true,
-          createdAt: true,
-          updatedAt: true
-        }
-      )
-    }
+        },
+        asal_sekolah: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    );
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Berhasil mengambil data',
+      user: JSON.parse(JSON.stringify(user, BigIntToJSON)),
+    });
   }
 
-  @Roles('admin')
+  @Roles('admin', 'guru', 'siswa')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Patch('update/:id')
+  @Patch('update-profile')
   @ApiOperation({ summary: 'Update User' })
   @ApiBody({
     description: 'Update User',
@@ -315,32 +324,29 @@ export class UserController {
     required: true,
   })
   async updateProfileUSer(
-    @Param('id') id: number,
     @Res() res: Response,
     @Body() updateUserProfileDto: UpdateUserProfileDto,
-    @Req() req: Request
+    @Req() req: Request,
   ) {
     const userId = req['user'].sub;
-    const role = req['role'];
 
-    if (userId !== id && role !== 'admin') {
-      throw new ForbiddenException('Anda tidak memiliki izin untuk memperbarui profil ini.');
-    }
-
-    const user = await this.userService.findOne({ id });
+    const user = await this.userService.findOne({ id: userId });
 
     if (!user) throw new NotFoundException('User tidak ditemukan');
 
     if (updateUserProfileDto.password !== updateUserProfileDto.confPassword)
       throw new BadRequestException('Password dan confirm password tidak sama');
 
-    const userUpdate = await this.userService.updateUserProfile(id, updateUserProfileDto);
+    const userUpdate = await this.userService.updateUserProfile(
+      userId,
+      updateUserProfileDto,
+    );
+    delete userUpdate.password;
 
-    const { password, ...data } = userUpdate;
     res.status(200).json({
       status: 'success',
       message: 'Berhasil mengubah data',
-      user: JSON.parse(JSON.stringify(data, BigIntToJSON)),
+      user: JSON.parse(JSON.stringify(userUpdate, BigIntToJSON)),
     });
   }
 }

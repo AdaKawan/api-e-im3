@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PengumpulanDto } from './find-all-nilai-response.dto';
+import { PengumpulanDto } from 'src/nilai/dto/find-all-nilai-response.dto';
 
 export class FindOneNilaiResponseDto {
   @ApiProperty({ example: 'success' })

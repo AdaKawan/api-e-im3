@@ -15,12 +15,11 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
-    private configService: ConfigService
-  ) { }
+    private configService: ConfigService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const response = context.switchToHttp().getResponse();
     const headerAut = request.headers.authorization;
     if (!headerAut) {
       throw new UnauthorizedException();

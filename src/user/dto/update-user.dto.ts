@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   MinLength,
   IsOptional,
-  IsNumber,
   IsBoolean,
 } from 'class-validator';
 

@@ -3,8 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreatePelajaranDto } from './dto/create-pelajaran.dto';
-import { UpdatePelajaranDto } from './dto/update-pelajaran.dto';
+import { CreatePelajaranDto } from 'src/pelajaran/dto/create-pelajaran.dto';
+import { UpdatePelajaranDto } from 'src/pelajaran/dto/update-pelajaran.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Pelajaran, Prisma } from '@prisma/client';
 
@@ -176,6 +176,16 @@ export class PelajaranService {
     return this.prisma.pelajaran.findMany({
       where,
       include,
+    });
+  }
+
+  async findManyBySekolahAndJenjang({
+    where,
+  }: {
+    where?: Prisma.PelajaranWhereInput;
+  }): Promise<Partial<Pelajaran>[]> {
+    return this.prisma.pelajaran.findMany({
+      where,
     });
   }
 }
