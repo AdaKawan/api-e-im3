@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateNilaiDto } from './dto/create-nilai.dto';
-import { UpdateNilaiDto } from './dto/update-nilai.dto';
+import { CreateNilaiDto } from 'src/nilai/dto/create-nilai.dto';
+import { UpdateNilaiDto } from 'src/nilai/dto/update-nilai.dto';
 import { Nilai, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 

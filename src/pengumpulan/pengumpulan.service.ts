@@ -1,12 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreatePengumpulanDto } from './dto/create-pengumpulan.dto';
-import { UpdatePengumpulanDto } from './dto/update-pengumpulan.dto';
+import { CreatePengumpulanDto } from 'src/pengumpulan/dto/create-pengumpulan.dto';
+import { UpdatePengumpulanDto } from 'src/pengumpulan/dto/update-pengumpulan.dto';
 import { Pengumpulan, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PengumpulanService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(
     pengumpulId: number,

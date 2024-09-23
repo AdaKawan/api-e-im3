@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserOnMateriDto } from './dto/create-user-on-materi.dto';
-import { UpdateUserOnMateriDto } from './dto/update-user-on-materi.dto';
+import { CreateUserOnMateriDto } from 'src/user-on-materi/dto/create-user-on-materi.dto';
 import { UserOnMateri, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 

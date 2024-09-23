@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRefreshTokenDto } from './dto/create-refresh-token.dto';
-import { UpdateRefreshTokenDto } from './dto/update-refresh-token.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RefreshToken } from '@prisma/client';
 import * as moment from 'moment-timezone';
 
 @Injectable()
 export class RefreshTokenService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async isJtiUsed(jti: string): Promise<boolean> {
     const token = await this.prisma.refreshToken.findMany({
@@ -35,7 +33,6 @@ export class RefreshTokenService {
     const localTime = now.tz(timeZone);
     const localString = localTime.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
-
     await this.prisma.refreshToken.create({
       data: {
         userId: userId,
@@ -45,7 +42,7 @@ export class RefreshTokenService {
     });
   }
 
-  async updateUsedJti(oldJti: string, newJti: string, expiresAt: number) {
+  async updateUsedJti(oldJti: string, newJti: string) {
     const now = moment().add(7, 'days');
     const timeZone = 'Asia/Jakarta';
 
@@ -95,9 +92,6 @@ export class RefreshTokenService {
   }
 
   async allJti() {
-    const localDate = new Date(
-      new Date().getTime() + new Date().getTimezoneOffset() * 60000,
-    );
     return await this.prisma.refreshToken.findMany({
       where: {
         expiredDate: {

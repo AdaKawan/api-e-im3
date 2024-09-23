@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="21" failures="0" errors="0" time="51.328">
+  <testsuite name="Auth Controller (e2e)" errors="0" failures="0" skipped="0" timestamp="2024-09-23T14:58:40" time="28.325" tests="7">
+    <testcase classname="Auth Controller (e2e) Login Admin Berhasil login sebagai pengguna role Admin" name="Auth Controller (e2e) Login Admin Berhasil login sebagai pengguna role Admin" time="1.687">
+    </testcase>
+    <testcase classname="Auth Controller (e2e) Login Guru Berhasil login sebagai pengguna role Guru" name="Auth Controller (e2e) Login Guru Berhasil login sebagai pengguna role Guru" time="0.77">
+    </testcase>
+    <testcase classname="Auth Controller (e2e) Login Siswa Berhasil login sebagai pengguna role Siswa" name="Auth Controller (e2e) Login Siswa Berhasil login sebagai pengguna role Siswa" time="0.762">
+    </testcase>
+    <testcase classname="Auth Controller (e2e) Register Guru Harus berhasil mendaftar sebagai Guru" name="Auth Controller (e2e) Register Guru Harus berhasil mendaftar sebagai Guru" time="0.682">
+    </testcase>
+    <testcase classname="Auth Controller (e2e) Register Siswa Harus berhasil mendaftar sebagai Siswa" name="Auth Controller (e2e) Register Siswa Harus berhasil mendaftar sebagai Siswa" time="0.502">
+    </testcase>
+    <testcase classname="Auth Controller (e2e) AutoLogin Berhasil auto-login" name="Auth Controller (e2e) AutoLogin Berhasil auto-login" time="0.645">
+    </testcase>
+    <testcase classname="Auth Controller (e2e) Get Me Berhasil mendapatkan informasi user" name="Auth Controller (e2e) Get Me Berhasil mendapatkan informasi user" time="0.445">
+    </testcase>
+  </testsuite>
+  <testsuite name="Users Controller Admin (e2e)" errors="0" failures="0" skipped="0" timestamp="2024-09-23T14:59:08" time="17.156" tests="12">
+    <testcase classname="Users Controller Admin (e2e) Activate Guru Admin harus berhasil mengaktifkan user yang sudah mendaftar" name="Users Controller Admin (e2e) Activate Guru Admin harus berhasil mengaktifkan user yang sudah mendaftar" time="1.07">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Activate Siswa Admin harus berhasil mengaktifkan user yang sudah mendaftar" name="Users Controller Admin (e2e) Activate Siswa Admin harus berhasil mengaktifkan user yang sudah mendaftar" time="0.623">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Get All Guru /users/get-all-guru (GET)" name="Users Controller Admin (e2e) Get All Guru /users/get-all-guru (GET)" time="0.722">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Get All Siswa /users/get-all-siswa (GET)" name="Users Controller Admin (e2e) Get All Siswa /users/get-all-siswa (GET)" time="0.385">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Find One Guru /users/find-one-guru/:id (GET)" name="Users Controller Admin (e2e) Find One Guru /users/find-one-guru/:id (GET)" time="0.692">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Find One Siswa /users/find-one-siswa/:id (GET)" name="Users Controller Admin (e2e) Find One Siswa /users/find-one-siswa/:id (GET)" time="0.519">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Create User /users/create (POST)" name="Users Controller Admin (e2e) Create User /users/create (POST)" time="1.111">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Get All User /users/get-all (GET)" name="Users Controller Admin (e2e) Get All User /users/get-all (GET)" time="0.481">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Update User /users/update/:id (PATCH)" name="Users Controller Admin (e2e) Update User /users/update/:id (PATCH)" time="0.918">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Delete User /users/delete/:id (DELETE)" name="Users Controller Admin (e2e) Delete User /users/delete/:id (DELETE)" time="0.872">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Get Me User /users/get-me (GET)" name="Users Controller Admin (e2e) Get Me User /users/get-me (GET)" time="0.5">
+    </testcase>
+    <testcase classname="Users Controller Admin (e2e) Update Profile /users/update-profile (PATCH)" name="Users Controller Admin (e2e) Update Profile /users/update-profile (PATCH)" time="0.887">
+    </testcase>
+  </testsuite>
+  <testsuite name="Auth New User (e2e)" errors="0" failures="0" skipped="0" timestamp="2024-09-23T14:59:25" time="4.822" tests="2">
+    <testcase classname="Auth New User (e2e) Login New User Guru Berhasil login pengguna baru role guru" name="Auth New User (e2e) Login New User Guru Berhasil login pengguna baru role guru" time="1.318">
+    </testcase>
+    <testcase classname="Auth New User (e2e) Login New User Siswa Berhasil login pengguna baru role siswa" name="Auth New User (e2e) Login New User Siswa Berhasil login pengguna baru role siswa" time="0.73">
+    </testcase>
+  </testsuite>
+</testsuites>

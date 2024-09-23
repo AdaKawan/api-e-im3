@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   NotFoundException,
@@ -11,9 +10,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { UserOnMateriService } from './user-on-materi.service';
-import { CreateUserOnMateriDto } from './dto/create-user-on-materi.dto';
-import { UpdateUserOnMateriDto } from './dto/update-user-on-materi.dto';
+import { UserOnMateriService } from 'src/user-on-materi/user-on-materi.service';
+import { CreateUserOnMateriDto } from 'src/user-on-materi/dto/create-user-on-materi.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
@@ -26,7 +24,7 @@ import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
 @Controller('user-on-materi')
 @ApiTags('User On Materi')
 export class UserOnMateriController {
-  constructor(private readonly userOnMateriService: UserOnMateriService) { }
+  constructor(private readonly userOnMateriService: UserOnMateriService) {}
 
   @Post('create')
   @ApiBearerAuth()
@@ -39,7 +37,6 @@ export class UserOnMateriController {
     @Req() req: Request,
   ) {
     const userId = req['user'].sub;
-    const role = req['role'];
     const userOnMateri = await this.userOnMateriService.create(
       userId,
       createUserOnMateriDto,
@@ -64,24 +61,24 @@ export class UserOnMateriController {
       role === 'admin'
         ? await this.userOnMateriService.findMany()
         : await this.userOnMateriService.findManyFilteredWithSelect({
-          where: {
-            materi: {
-              creatorId: userId,
-            },
-          },
-          select: {
-            user: {
-              select: {
-                nama_lengkap: true,
+            where: {
+              materi: {
+                creatorId: userId,
               },
             },
-            materi: {
-              select: {
-                nama_materi: true,
+            select: {
+              user: {
+                select: {
+                  nama_lengkap: true,
+                },
+              },
+              materi: {
+                select: {
+                  nama_materi: true,
+                },
               },
             },
-          },
-        });
+          });
 
     return res.status(200).json({
       status: 'success',

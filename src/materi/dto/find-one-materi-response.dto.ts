@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MateriDto } from './materi.dto';
+import { MateriDto } from 'src/materi/dto/materi.dto';
 
 export class FindOneMateriResponseDto {
   @ApiProperty({ example: 'success' })

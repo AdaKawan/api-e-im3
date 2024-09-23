@@ -1,5 +1,5 @@
 export default interface FileData {
-    fileName: string;
-    fileUrl: string;
-    originalName: string;
+  fileName: string;
+  fileUrl: string;
+  originalName: string;
 }

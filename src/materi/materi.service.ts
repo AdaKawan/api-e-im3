@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMateriDto } from './dto/create-materi.dto';
-import { UpdateMateriDto } from './dto/update-materi.dto';
+import { CreateMateriDto } from 'src/materi/dto/create-materi.dto';
+import { UpdateMateriDto } from 'src/materi/dto/update-materi.dto';
 import { Materi, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import FileData from 'src/common/types/FileData';
 
 @Injectable()
 export class MateriService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(
     userId: number,
     data: CreateMateriDto,
-    files: any[]
+    files: any[],
   ): Promise<Partial<Materi>> {
     return this.prisma.materi.create({
       data: {
@@ -36,7 +35,7 @@ export class MateriService {
       where,
       data: {
         ...data,
-        files: files
+        files: files,
       },
     });
   }

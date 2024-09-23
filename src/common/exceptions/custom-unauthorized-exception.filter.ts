@@ -3,7 +3,6 @@ import {
   Catch,
   ArgumentsHost,
   UnauthorizedException,
-  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
 

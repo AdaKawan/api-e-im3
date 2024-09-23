@@ -2,37 +2,39 @@ import { BadRequestException } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import { ConfigService } from '@nestjs/config';
 
 export const validateAndUploadFiles = async (
   routeFolder: string,
   files: Express.Multer.File[],
+  configService: ConfigService,
 ) => {
   const fileDocumentExtensions = ['.pdf', '.docx', '.doc'];
   const videoExtensions = [
-    ".mp4",
-    ".mov",
-    ".avi",
-    ".wmv",
-    ".flv",
-    ".f4v",
-    ".mkv",
-    ".webm",
-    ".avchd",
-    ".mpeg",
-    ".3gp",
-    ".3g2",
-    ".ogv",
-    ".m4v",
-    ".prores",
-    ".dnxhr",
-    ".dnxhd"
+    '.mp4',
+    '.mov',
+    '.avi',
+    '.wmv',
+    '.flv',
+    '.f4v',
+    '.mkv',
+    '.webm',
+    '.avchd',
+    '.mpeg',
+    '.3gp',
+    '.3g2',
+    '.ogv',
+    '.m4v',
+    '.prores',
+    '.dnxhr',
+    '.dnxhd',
   ];
   const imageExtensions = ['.jpg', '.png'];
 
   const allowedExtensions = [
     ...fileDocumentExtensions,
     ...videoExtensions,
-    ...imageExtensions
+    ...imageExtensions,
   ];
 
   const uploadedFiles = [];
@@ -58,7 +60,15 @@ export const validateAndUploadFiles = async (
       folder = 'images';
     }
 
-    const uploadPath = path.join(__dirname, '..', '..', '..', 'public', `${routeFolder}`, `${folder}`);
+    const uploadPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'public',
+      `${routeFolder}`,
+      `${folder}`,
+    );
 
     // Ensure the directory exists
     if (!fs.existsSync(uploadPath)) {
@@ -68,11 +78,12 @@ export const validateAndUploadFiles = async (
     const filePath = path.join(uploadPath, newFileName);
     fs.writeFileSync(filePath, file.buffer);
 
-    const fileUrl = `http://localhost:6948/public/${routeFolder}/${folder}/${newFileName}`;
+    const baseUrl = configService.get<string>('baseUrl');
+    const fileUrl = `${baseUrl}/public/${routeFolder}/${folder}/${newFileName}`;
     uploadedFiles.push({
       fileName: newFileName,
       fileUrl,
-      originalName: file.originalname
+      originalName: file.originalname,
     });
   }
 

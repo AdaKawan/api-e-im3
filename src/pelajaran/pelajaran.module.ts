@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { PelajaranService } from './pelajaran.service';
-import { PelajaranController } from './pelajaran.controller';
+import { PelajaranService } from 'src/pelajaran/pelajaran.service';
+import { PelajaranController } from 'src/pelajaran/pelajaran.controller';
 
 @Global()
 @Module({

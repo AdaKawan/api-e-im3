@@ -1,0 +1,260 @@
+<html><head><meta charset="utf-8"/><title>E2E Testing Controller</title><style type="text/css">html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+body {
+  padding: 2rem 1rem;
+  font-size: 0.85rem;
+}
+.jesthtml-content {
+  margin: 0 auto;
+  max-width: 70rem;
+}
+header {
+  display: flex;
+  align-items: center;
+}
+#title {
+  margin: 0;
+  flex-grow: 1;
+}
+#logo {
+  height: 4rem;
+}
+#timestamp {
+  color: #777;
+  margin-top: 0.5rem;
+}
+
+/** SUMMARY */
+#summary {
+  color: #333;
+  margin: 2rem 0;
+  display: flex;
+  font-family: monospace;
+  font-size: 1rem;
+}
+#summary > div {
+  margin-right: 2rem;
+  background: #eee;
+  padding: 1rem;
+  min-width: 15rem;
+}
+#summary > div:last-child {
+  margin-right: 0;
+}
+@media only screen and (max-width: 720px) {
+  #summary {
+    flex-direction: column;
+  }
+  #summary > div {
+    margin-right: 0;
+    margin-top: 2rem;
+  }
+  #summary > div:first-child {
+    margin-top: 0;
+  }
+}
+
+.summary-total {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.summary-passed {
+  color: #4f8a10;
+  border-left: 0.4rem solid #4f8a10;
+  padding-left: 0.5rem;
+}
+.summary-failed,
+.summary-obsolete-snapshots {
+  color: #d8000c;
+  border-left: 0.4rem solid #d8000c;
+  padding-left: 0.5rem;
+}
+.summary-pending {
+  color: #9f6000;
+  border-left: 0.4rem solid #9f6000;
+  padding-left: 0.5rem;
+}
+.summary-empty {
+  color: #999;
+  border-left: 0.4rem solid #999;
+}
+
+.test-result {
+  padding: 1rem;
+  margin-bottom: 0.25rem;
+}
+.test-result:last-child {
+  border: 0;
+}
+.test-result.passed {
+  background-color: #dff2bf;
+  color: #4f8a10;
+}
+.test-result.failed {
+  background-color: #ffbaba;
+  color: #d8000c;
+}
+.test-result.pending {
+  background-color: #ffdf61;
+  color: #9f6000;
+}
+
+.test-info {
+  display: flex;
+  justify-content: space-between;
+}
+.test-suitename {
+  width: 20%;
+  text-align: left;
+  font-weight: bold;
+  word-break: break-word;
+}
+.test-title {
+  width: 40%;
+  text-align: left;
+  font-style: italic;
+}
+.test-status {
+  width: 20%;
+  text-align: right;
+}
+.test-duration {
+  width: 10%;
+  text-align: right;
+  font-size: 0.75rem;
+}
+
+.failureMessages {
+  padding: 0 1rem;
+  margin-top: 1rem;
+  border-top: 1px dashed #d8000c;
+}
+.failureMessages.suiteFailure {
+  border-top: none;
+}
+.failureMsg {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.suite-container {
+  margin-bottom: 2rem;
+}
+.suite-container > input[type="checkbox"] {
+  position: absolute;
+  left: -100vw;
+}
+.suite-container label {
+  display: block;
+}
+.suite-container .suite-tests {
+  overflow-y: hidden;
+  height: 0;
+}
+.suite-container > input[type="checkbox"]:checked ~ .suite-tests {
+  height: auto;
+  overflow: visible;
+}
+.suite-info {
+  padding: 1rem;
+  background-color: #eee;
+  color: #777;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.suite-info:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+.suite-info .suite-path {
+  word-break: break-all;
+  flex-grow: 1;
+  font-family: monospace;
+  font-size: 1rem;
+}
+.suite-info .suite-time {
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.75rem;
+}
+.suite-info .suite-time.warn {
+  background-color: #d8000c;
+  color: #fff;
+}
+.suite-info:before {
+  content: "\2303";
+  display: inline-block;
+  margin-right: 0.5rem;
+  transform: rotate(0deg);
+}
+.suite-container > input[type="checkbox"]:checked ~ label .suite-info:before {
+  transform: rotate(180deg);
+}
+
+/* CONSOLE LOGS */
+.suite-consolelog {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: #efefef;
+}
+.suite-consolelog-header {
+  font-weight: bold;
+}
+.suite-consolelog-item {
+  padding: 0.5rem;
+}
+.suite-consolelog-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-consolelog-item-origin {
+  color: #777;
+  font-weight: bold;
+}
+.suite-consolelog-item-message {
+  color: #000;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+
+/* OBSOLETE SNAPSHOTS */
+.suite-obsolete-snapshots {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: #ffbaba;
+  color: #d8000c;
+}
+.suite-obsolete-snapshots-header {
+  font-weight: bold;
+}
+.suite-obsolete-snapshots-item {
+  padding: 0.5rem;
+}
+.suite-obsolete-snapshots-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-obsolete-snapshots-item-message {
+  color: #000;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+</style></head><body><div class="jesthtml-content"><header><h1 id="title">E2E Testing Controller</h1></header><div id="metadata-container"><div id="timestamp">Started: 2024-09-23 21:58:39</div><div id="summary"><div id="suite-summary"><div class="summary-total">Suites (3)</div><div class="summary-passed ">3 passed</div><div class="summary-failed  summary-empty">0 failed</div><div class="summary-pending  summary-empty">0 pending</div></div><div id="test-summary"><div class="summary-total">Tests (21)</div><div class="summary-passed ">21 passed</div><div class="summary-failed  summary-empty">0 failed</div><div class="summary-pending  summary-empty">0 pending</div></div></div></div><div id="suite-1" class="suite-container"><input id="collapsible-0" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-0"><div class="suite-info"><div class="suite-path">E:\projekku\website-sekolah\aplikasi-fullstack\github\api-e-im3\test\e2e\01-auth-controller.e2e-spec.ts</div><div class="suite-time warn">28.325s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth Controller (e2e) &gt; Login Admin</div><div class="test-title">Berhasil login sebagai pengguna role Admin</div><div class="test-status">passed</div><div class="test-duration">1.687s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth Controller (e2e) &gt; Login Guru</div><div class="test-title">Berhasil login sebagai pengguna role Guru</div><div class="test-status">passed</div><div class="test-duration">0.77s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth Controller (e2e) &gt; Login Siswa</div><div class="test-title">Berhasil login sebagai pengguna role Siswa</div><div class="test-status">passed</div><div class="test-duration">0.762s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth Controller (e2e) &gt; Register Guru</div><div class="test-title">Harus berhasil mendaftar sebagai Guru</div><div class="test-status">passed</div><div class="test-duration">0.682s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth Controller (e2e) &gt; Register Siswa</div><div class="test-title">Harus berhasil mendaftar sebagai Siswa</div><div class="test-status">passed</div><div class="test-duration">0.502s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth Controller (e2e) &gt; AutoLogin</div><div class="test-title">Berhasil auto-login</div><div class="test-status">passed</div><div class="test-duration">0.645s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth Controller (e2e) &gt; Get Me</div><div class="test-title">Berhasil mendapatkan informasi user</div><div class="test-status">passed</div><div class="test-duration">0.445s</div></div></div></div></div><div id="suite-2" class="suite-container"><input id="collapsible-1" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-1"><div class="suite-info"><div class="suite-path">E:\projekku\website-sekolah\aplikasi-fullstack\github\api-e-im3\test\e2e\02-user-controller-admin.e2e-spec.ts</div><div class="suite-time warn">17.156s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Activate Guru</div><div class="test-title">Admin harus berhasil mengaktifkan user yang sudah mendaftar</div><div class="test-status">passed</div><div class="test-duration">1.07s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Activate Siswa</div><div class="test-title">Admin harus berhasil mengaktifkan user yang sudah mendaftar</div><div class="test-status">passed</div><div class="test-duration">0.623s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Get All Guru</div><div class="test-title">/users/get-all-guru (GET)</div><div class="test-status">passed</div><div class="test-duration">0.722s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Get All Siswa</div><div class="test-title">/users/get-all-siswa (GET)</div><div class="test-status">passed</div><div class="test-duration">0.385s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Find One Guru</div><div class="test-title">/users/find-one-guru/:id (GET)</div><div class="test-status">passed</div><div class="test-duration">0.692s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Find One Siswa</div><div class="test-title">/users/find-one-siswa/:id (GET)</div><div class="test-status">passed</div><div class="test-duration">0.519s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Create User</div><div class="test-title">/users/create (POST)</div><div class="test-status">passed</div><div class="test-duration">1.111s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Get All User</div><div class="test-title">/users/get-all (GET)</div><div class="test-status">passed</div><div class="test-duration">0.481s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Update User</div><div class="test-title">/users/update/:id (PATCH)</div><div class="test-status">passed</div><div class="test-duration">0.918s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Delete User</div><div class="test-title">/users/delete/:id (DELETE)</div><div class="test-status">passed</div><div class="test-duration">0.872s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Get Me User</div><div class="test-title">/users/get-me (GET)</div><div class="test-status">passed</div><div class="test-duration">0.5s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Users Controller Admin (e2e) &gt; Update Profile</div><div class="test-title">/users/update-profile (PATCH)</div><div class="test-status">passed</div><div class="test-duration">0.887s</div></div></div></div></div><div id="suite-3" class="suite-container"><input id="collapsible-2" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-2"><div class="suite-info"><div class="suite-path">E:\projekku\website-sekolah\aplikasi-fullstack\github\api-e-im3\test\e2e\03-auth-new-user.e2e-spec.ts</div><div class="suite-time">4.822s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth New User (e2e) &gt; Login New User Guru</div><div class="test-title">Berhasil login pengguna baru role guru</div><div class="test-status">passed</div><div class="test-duration">1.318s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Auth New User (e2e) &gt; Login New User Siswa</div><div class="test-title">Berhasil login pengguna baru role siswa</div><div class="test-status">passed</div><div class="test-duration">0.73s</div></div></div></div></div></div></body></html>

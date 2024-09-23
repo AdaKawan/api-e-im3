@@ -1,4 +1,12 @@
-export default () => ({
-  access_token_secret: process.env.ACCES_TOKEN,
-  refresh_token_secret: process.env.REFRESH_TOKEN,
-});
+export default () => {
+  const env = process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV';
+
+  return {
+    environment: process.env.NODE_ENV || 'development',
+    refreshToken: process.env[`${env}_REFRESH_TOKEN`],
+    accessToken: process.env[`${env}_ACCESS_TOKEN`],
+    baseUrl: process.env[`${env}_BASE_URL`],
+    swaggerUser: process.env.SWAGGER_USER,
+    swaggerPassword: process.env.SWAGGER_PASSWORD
+  };
+};

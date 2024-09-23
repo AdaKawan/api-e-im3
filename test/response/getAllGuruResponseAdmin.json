@@ -1,0 +1,51 @@
+{
+  "status": "success",
+  "message": "Berhasil mengambil data",
+  "guru": [
+    {
+      "id": 2,
+      "nama_lengkap": "Guru SMP Negeri 2 Barat",
+      "username": "guruSmpNegeri2Barat",
+      "email": "guru_smp_negeri_2_baratA@gmail.com",
+      "roleId": 2,
+      "asal_sekolah": "smp negeri 2 barat",
+      "isActive": true,
+      "role": {
+        "id": 2,
+        "role": "guru"
+      },
+      "createdAt": "2024-09-23T14:58:25.760Z",
+      "updatedAt": "2024-09-23T14:58:25.760Z"
+    },
+    {
+      "id": 3,
+      "nama_lengkap": "Guru SMP Negeri 1 Lembeyan",
+      "username": "guruSmpNegeri1Lembeyan",
+      "email": "guru_smp_negeri_1_lembeyan@gmail.com",
+      "roleId": 2,
+      "asal_sekolah": "smp negeri 1 lembeyan",
+      "isActive": true,
+      "role": {
+        "id": 2,
+        "role": "guru"
+      },
+      "createdAt": "2024-09-23T14:58:26.093Z",
+      "updatedAt": "2024-09-23T14:58:26.093Z"
+    },
+    {
+      "id": 6,
+      "nama_lengkap": "Kamal Januar, S.Kom",
+      "username": "kamal.januar,17",
+      "email": "kamal_januar55@gmail.co.id",
+      "roleId": 2,
+      "asal_sekolah": "smp negeri 2 parang",
+      "isActive": true,
+      "role": {
+        "id": 2,
+        "role": "guru"
+      },
+      "createdAt": "2024-09-23T14:59:06.642Z",
+      "updatedAt": "2024-09-23T14:59:17.707Z"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { User } from 'src/user/entities/user.entity';
-import { GuruData } from './types/user.types';
+import { GuruData } from 'src/common/types/user.types';
 
 export const PrismaExtensions = new PrismaClient().$extends({
   model: {
@@ -35,7 +35,7 @@ export const PrismaExtensions = new PrismaClient().$extends({
         const siswa = await new PrismaClient().user.findMany({
           where: {
             roleId: 3,
-            isActive: true
+            isActive: true,
           },
           select: {
             id: true,

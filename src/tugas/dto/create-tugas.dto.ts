@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsDate, IsArray } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsDate,
+  IsArray,
+} from 'class-validator';
 
 export class CreateTugasDto {
   @ApiProperty({
@@ -25,7 +31,7 @@ export class CreateTugasDto {
         title: 'Apa simbol kimia untuk air?',
         answer: 'H2O',
         points: 5,
-        content: 'Apa simbol kimia untuk air?'
+        content: 'Apa simbol kimia untuk air?',
       },
       {
         id: 6,
@@ -37,9 +43,9 @@ export class CreateTugasDto {
           { text: 'Sydney', isCorrect: false },
           { text: 'Melbourne', isCorrect: false },
           { text: 'Canberra', isCorrect: true },
-          { text: 'Brisbane', isCorrect: false }
-        ]
-      }
+          { text: 'Brisbane', isCorrect: false },
+        ],
+      },
     ],
   })
   @IsNotEmpty()

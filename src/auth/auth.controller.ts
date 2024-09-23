@@ -3,9 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   NotFoundException,
   Req,
   UnauthorizedException,
@@ -13,17 +10,17 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { LoginDto } from 'src/auth/dto/login.dto';
 import { Request, Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import * as argon2 from 'argon2';
 import { success } from 'src/common/utils/responseHandler';
-import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
-import { RegisterDto } from './dto/register.dto';
+import { RegisterDto } from 'src/auth/dto/register.dto';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -40,19 +37,22 @@ export class AuthController {
   async register(
     @Body() registerDto: RegisterDto,
     @Req() req: Request,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
     if (registerDto.roleId === 2) {
       if (!registerDto.asal_sekolah) {
-        throw new BadRequestException('Guru wajib mengisi asal sekolah')
+        throw new BadRequestException('Guru wajib mengisi asal sekolah');
       }
     }
 
-    const user = this.userService.create(registerDto)
+    const user = await this.userService.create(registerDto);
+    delete user.password
 
-    return res.status(201).json(
-      success('Pendaftaran sukses mohon tunggu konfirmasi admin'),
-    );
+    return res
+      .status(201)
+      .json(success('Pendaftaran sukses mohon tunggu konfirmasi admin', {
+        user: JSON.parse(JSON.stringify(user, BigIntToJSON))
+      }));
   }
 
   @Post('login')
@@ -64,30 +64,30 @@ export class AuthController {
         summary: 'Admin Login',
         description: 'Digunakan untuk login sebagai admin',
         value: {
-          username: "admin",
-          password: "admin12345678",
-          rememberMe: true
-        }
+          username: 'admin',
+          password: 'admin12345678',
+          rememberMe: true,
+        },
       },
       guruSmpNegeri2Barat: {
         summary: 'Guru SMP Negeri 2 Barat Login',
         description: 'Digunakan untuk login sebagai Guru SMP Negeri 2 Barat',
         value: {
-          username: "gurusmpnegeri2barat",
-          password: "gurusmpnegeri2barat",
-          rememberMe: true
-        }
+          username: 'gurusmpnegeri2barat',
+          password: 'gurusmpnegeri2barat',
+          rememberMe: true,
+        },
       },
       guruSmpNegeri1Lembeyan: {
         summary: 'Guru SMP Negeri 1 Lembeyan Login',
         description: 'Digunakan untuk login sebagai Guru SMP Negeri 1 Lembeyan',
         value: {
-          username: "guruSmpNegeri1Lembeyan",
-          password: "gurusmpnegeri1lembeyan",
-          rememberMe: true
-        }
+          username: 'guruSmpNegeri1Lembeyan',
+          password: 'gurusmpnegeri1lembeyan',
+          rememberMe: true,
+        },
       },
-    }
+    },
   })
   async login(
     @Body() loginDto: LoginDto,
@@ -105,7 +105,10 @@ export class AuthController {
 
     if (!user) throw new NotFoundException('User tidak ditemukan');
 
-    if (!user.isActive) throw new UnauthorizedException('Maaf Akun anda belum aktif mohon tunggu konfirmasi admin')
+    if (!user.isActive)
+      throw new UnauthorizedException(
+        'Maaf Akun anda belum aktif mohon tunggu konfirmasi admin',
+      );
 
     const userId = Number(user.id);
 
@@ -120,11 +123,13 @@ export class AuthController {
 
     return res.status(200).json(
       success('Berhasil login', {
-        id: userId,
-        nama_lengkap: user.nama_lengkap,
-        role: user.role.role,
-        asal_sekolah: user.asal_sekolah,
-        refresh_token: refreshToken.refresh_token,
+        user: {
+          id: userId,
+          nama_lengkap: user.nama_lengkap,
+          role: user.role.role,
+          asal_sekolah: user.asal_sekolah,
+          refresh_token: refreshToken.refresh_token,
+        }
       }),
     );
   }
@@ -157,7 +162,6 @@ export class AuthController {
       .json(
         success(
           'Berhasil logout',
-          JSON.parse(JSON.stringify(tokens, BigIntToJSON)),
         ),
       );
   }
@@ -194,28 +198,24 @@ export class AuthController {
         role,
       };
 
-      const currentTime = Date.now();
-
       const jtiFind = await this.refresTokenService.findJti(jti);
 
       if (!jtiFind) throw new NotFoundException('User tidak ditemukan');
 
-      const token = await this.authService.autoLogin(
-        userPayload,
-        jti,
-        currentTime,
-      );
+      const token = await this.authService.autoLogin(userPayload, jti);
 
       const expirationDate = new Date();
       expirationDate.setDate(expirationDate.getDate() + 7);
 
       return res.status(200).json(
         success('Berhasil login', {
-          id: Number(user.id),
-          nama_lengkap: user.nama_lengkap,
-          role: user.role.role,
-          asal_sekolah: user.asal_sekolah,
-          refresh_token: token.refresh_token,
+          user: {
+            id: Number(user.id),
+            nama_lengkap: user.nama_lengkap,
+            role: user.role.role,
+            asal_sekolah: user.asal_sekolah,
+            refresh_token: token.refresh_token,
+          }
         }),
       );
     } catch (error) {
@@ -246,8 +246,7 @@ export class AuthController {
 
       const decode = await this.jwtService.verifyAsync(refreshToken);
 
-
-      const { sub, username, email, role, jti } = decode;
+      const { sub, jti } = decode;
 
       const user = await this.userService.findOneWithIncludeedField(
         {
@@ -257,12 +256,6 @@ export class AuthController {
           role: true,
         },
       );
-      const userPayload = {
-        id: sub,
-        username,
-        email,
-        role,
-      };
 
       const jtiFind = await this.refresTokenService.findJti(jti);
 
@@ -270,10 +263,12 @@ export class AuthController {
 
       return res.status(200).json(
         success('Berhasil', {
-          id: Number(user.id),
-          nama_lengkap: user.nama_lengkap,
-          role: user.role.role,
-          asal_sekolah: user.asal_sekolah,
+          user: {
+            id: Number(user.id),
+            nama_lengkap: user.nama_lengkap,
+            role: user.role.role,
+            asal_sekolah: user.asal_sekolah,
+          }
         }),
       );
     } catch (error) {

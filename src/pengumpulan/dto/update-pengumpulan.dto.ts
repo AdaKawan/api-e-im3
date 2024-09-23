@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class UpdatePengumpulanDto {
   @ApiProperty({
@@ -17,12 +17,12 @@ export class UpdatePengumpulanDto {
     example: [
       {
         id: 5,
-        answer: 'H2O'
+        answer: 'H2O',
       },
       {
         id: 6,
-        answer: 'Canberra'
-      }
+        answer: 'Canberra',
+      },
     ],
   })
   @IsNotEmpty()

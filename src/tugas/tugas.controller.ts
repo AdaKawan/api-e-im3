@@ -8,33 +8,27 @@ import {
   Delete,
   NotFoundException,
   Res,
-  UseInterceptors,
-  UploadedFile,
-  BadRequestException,
   Req,
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
-import { TugasService } from './tugas.service';
-import { CreateTugasDto } from './dto/create-tugas.dto';
-import { UpdateTugasDto } from './dto/update-tugas.dto';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { TugasService } from 'src/tugas/tugas.service';
+import { CreateTugasDto } from 'src/tugas/dto/create-tugas.dto';
+import { UpdateTugasDto } from 'src/tugas/dto/update-tugas.dto';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BigIntToJSON } from 'src/common/utils/bigint-to-json';
 import { Request, Response } from 'express';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-import * as path from 'path';
-import { del, put } from '@vercel/blob';
-import { FindAllTugasResponseDto } from './dto/get-all-tugas.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
-
 import { Roles } from 'src/common/anotations/roles';
 import { JwtAuthGuard } from 'src/common/guards/access-token.guard';
 import { RoleGuard } from 'src/common/guards/roles.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-
 
 @UseGuards(AuthGuard)
 @Controller('tugas')
@@ -43,17 +37,15 @@ export class TugasController {
   constructor(
     private readonly tugasService: TugasService,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
   @Post('create')
   @ApiBearerAuth()
-
   @Roles('admin', 'guru')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Create Tugas' })
   @ApiConsumes('multipart/form-data')
   async create(
-
     @Body() createTugasDto: CreateTugasDto,
     @Res() res: Response,
     @Req() req: Request,
@@ -123,14 +115,14 @@ export class TugasController {
     const tugas =
       role === 'admin'
         ? await this.tugasService.findManyFilteredWithSelect({
-          select: selecttedItem,
-        })
+            select: selecttedItem,
+          })
         : await this.tugasService.findManyFilteredWithSelect({
-          where: {
-            creatorId: userId,
-          },
-          select: selecttedItem,
-        });
+            where: {
+              creatorId: userId,
+            },
+            select: selecttedItem,
+          });
 
     return res.status(200).json({
       status: 'success',
@@ -198,24 +190,24 @@ export class TugasController {
     const tugas =
       role === 'admin'
         ? await this.tugasService.findOneFilteredWithSelect({
-          where: { id },
-          select: selectedItems,
-        })
-        : role === 'guru'
-          ? await this.tugasService.findOneFilteredWithSelect({
-            where: {
-              id,
-              creatorId: userId,
-            },
+            where: { id },
             select: selectedItems,
           })
+        : role === 'guru'
+          ? await this.tugasService.findOneFilteredWithSelect({
+              where: {
+                id,
+                creatorId: userId,
+              },
+              select: selectedItems,
+            })
           : await this.tugasService.findOneFilteredWithSelect({
-            where: {
-              id,
-              creatorId: userId,
-            },
-            select: selectedItemsRoleSiswa,
-          });
+              where: {
+                id,
+                creatorId: userId,
+              },
+              select: selectedItemsRoleSiswa,
+            });
 
     if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
 
@@ -230,11 +222,9 @@ export class TugasController {
   @ApiBearerAuth()
   @Roles('admin', 'guru')
   @UseGuards(JwtAuthGuard, RoleGuard)
-
   @ApiOperation({ summary: 'Update Tugas' })
   @ApiConsumes('multipart/form-data')
   async update(
-
     @Param('id') id: number,
     @Body() updateTugasDto: UpdateTugasDto,
     @Res() res: Response,
@@ -247,14 +237,14 @@ export class TugasController {
       role === 'admin'
         ? await this.tugasService.findOne(id)
         : await this.tugasService.findOneFilteredWithInclude({
-          where: {
-            id,
-            creatorId: userId,
-          },
-          include: {
-            materi: true,
-          },
-        });
+            where: {
+              id,
+              creatorId: userId,
+            },
+            include: {
+              materi: true,
+            },
+          });
 
     if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
 
@@ -296,14 +286,14 @@ export class TugasController {
       role === 'admin'
         ? await this.tugasService.findOne(id)
         : await this.tugasService.findOneFilteredWithInclude({
-          where: {
-            id,
-            creatorId: userId,
-          },
-          include: {
-            materi: true,
-          },
-        });
+            where: {
+              id,
+              creatorId: userId,
+            },
+            include: {
+              materi: true,
+            },
+          });
 
     if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
 
