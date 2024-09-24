@@ -24,5 +24,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          chmod +x /home/rehan/web/rehan.niznet.my.id/nodeapp/run-deploy.sh
           bash /home/rehan/web/rehan.niznet.my.id/nodeapp/run-deploy.sh
