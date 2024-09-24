@@ -15,14 +15,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Setup SSH key and run deployment script
-    - name: Setup SSH key
-      uses: appleboy/ssh-action@v0.1.3
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        script: |
-          cd web/rehan.niznet.my.id/nodeapp
-          ./run-deploy.sh
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to VPS
+      run: |
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd web/rehan.niznet.my.id/nodeapp
+            ./run-deploy.sh
+        EOF
