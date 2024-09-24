@@ -29,12 +29,31 @@ if ! command -v pm2 &> /dev/null; then
     exit 1
 fi
 
-if [ -f .env ]; then
-    export $(cat .env | xargs)
-fi
-
 # Determine the environment
-NODE_ENV=${NODE_ENV:-development}
+NODE_ENV=production
+
+message="Creating or updating .env file with environment variables..."
+center_text "$message"
+
+cat > .env << EOF
+# Environment Variables
+DATABASE_URL="postgresql://postgres.ectnlrxewwpqkudnjaez:BNrS0YA64qzZAwRO@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.ectnlrxewwpqkudnjaez:BNrS0YA64qzZAwRO@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
+BLOB_READ_WRITE_TOKEN="vercel_blob_rw_nXk9U24lAscvHJQp_VygJF8ig1fuRcgZlMA0RzjRMX5wQK9"
+DEV_REFRESH_TOKEN="OksasdaKOKSAD12-3=12_jsfjodfs342IJSDoamm3"
+PROD_REFRESH_TOKEN="cvk[psodkfg[3i4i20-4uo[k[pOK{POK{SAPJFu90q802498524REWT@$%$SHEYU}}]P{p9dfi0l[faplsd[fh9h]asd]asdm;a;sdf?>"
+DEV_ACCESS_TOKEN="PdqwOsji012-caisdjofa_=sda021k231psk"
+PROD_ACCESS_TOKEN="}A{SPD(0234020saf)asd}{PDA9a02}p[k[idfa09u0fJOJX09sfd[2345l?>KLK:Kop?><dlfkpo]]]"
+DEV_BASE_URL=http://localhost:6948
+PROD_BASE_URL=https://rehan.niznet.my.id
+SWAGGER_USER=rayhan
+SWAGGER_PASSWORD=4k3m34ngry
+NODE_ENV=production
+EOF
+
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
 
 # Pesan
 message="Deployment started in $NODE_ENV mode, pulling codes..."
@@ -44,8 +63,8 @@ center_text "$message"
 cp ./deploy.sh /tmp/deploy.sh
 
 # Fetch the latest code from the main branch and reset the working directory
-# git fetch origin main && git reset --hard origin/main
-# git submodule update --recursive --remote
+git fetch origin main && git reset --hard origin/main
+git submodule update --recursive --remote
 
 # Check if the temporary deployment script exists
 if [ -f /tmp/deploy.sh ]; then
