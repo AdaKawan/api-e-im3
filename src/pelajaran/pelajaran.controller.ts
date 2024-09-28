@@ -74,7 +74,7 @@ export class PelajaranController {
 
   @Get('get-by-id/:id')
   @ApiOperation({ summary: 'Get One Pelajaran' })
-  @Roles('admin', 'guru')
+  @Roles('admin', 'guru', 'siswa')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async findOne(
     @Param('id') id: number,
@@ -87,12 +87,6 @@ export class PelajaranController {
     const includeClause: Prisma.PelajaranInclude = {
       materi: true,
     };
-
-    if (role === 'guru') {
-      whereClause = {
-        AND: [{ id }, { creatorId: userId }],
-      };
-    }
 
     const pelajaran = await this.pelajaranService.findOneFilteredWithInclude({
       where: whereClause,

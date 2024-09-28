@@ -30,11 +30,10 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'https://aplikasi-e-im3.vercel.app',
+      'https://5090-idx-app-e-im3git-1727246406476.cluster-qpa6grkipzc64wfjrbr3hsdma2.cloudworkstations.dev',
       'http://localhost:5090',
-      'https://friendly-guide-9grrxx5pg7ghx6x7-5090.app.github.dev',
-      'https://localhost:5090',
-      'https://localhost:3000',
+      'http://localhost:3000',
+      'https://app-e-im3.vercel.app'
     ],
     credentials: true,
   });
