@@ -85,7 +85,7 @@ export class PelajaranService {
     }
 
     if (role === 'guru') {
-      const pelajaran = await this.prisma.pelajaran.findFirst({
+      const pelajaran = await this.prisma.pelajaran.findUnique({
         where: {
           id,
           creatorId: userId,
@@ -157,12 +157,13 @@ export class PelajaranService {
     where,
     include,
   }: {
-    where: Prisma.PelajaranWhereInput;
+    where: Prisma.PelajaranWhereUniqueInput;
     include: Prisma.PelajaranInclude;
   }): Promise<Partial<Pelajaran> | null> {
-    return this.prisma.pelajaran.findFirst({
+    return this.prisma.pelajaran.findUnique({
       where,
       include,
+
     });
   }
 

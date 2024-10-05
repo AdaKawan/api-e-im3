@@ -153,10 +153,10 @@ export class UserService {
   }
 
   async findOneWithIncludeedField(
-    where: Prisma.UserWhereInput,
+    where: Prisma.UserWhereUniqueInput,
     include: Prisma.UserInclude,
   ) {
-    return this.prisma.user.findFirst({
+    return this.prisma.user.findUnique({
       where,
       include,
     });

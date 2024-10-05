@@ -31,7 +31,7 @@ export async function userSeed() {
             password: passwordGuruKelas1A,
             roleId: 2,
             isActive: true,
-            asal_sekolah: 'smp negeri 2 barat'
+            asal_sekolah: 'smp negeri 2 barat'.toUpperCase()
         }
     })
 
@@ -45,7 +45,7 @@ export async function userSeed() {
             password: passwordGuruKelas1B,
             roleId: 2,
             isActive: true,
-            asal_sekolah: 'smp negeri 1 lembeyan'
+            asal_sekolah: 'smp negeri 1 lembeyan'.toUpperCase()
         }
     })
 

@@ -83,8 +83,20 @@ export class PelajaranController {
   ) {
     const userId = req['user'].sub;
     const role = req['role'];
-    let whereClause: Prisma.PelajaranWhereInput = { id };
+    let whereClause: Prisma.PelajaranWhereUniqueInput = { id };
     const includeClause: Prisma.PelajaranInclude = {
+      creator: {
+        omit: {
+          asal_sekolah: true,
+          email: true,
+          username: true,
+          password: true,
+          isActive: true,
+          roleId: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      },
       materi: true,
     };
 
