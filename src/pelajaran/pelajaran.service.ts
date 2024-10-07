@@ -33,7 +33,7 @@ export class PelajaranService {
         },
       });
 
-      if (isInSchool.asal_sekolah === data.asal_sekolah) {
+      if (isInSchool.asal_sekolah !== data.asal_sekolah) {
         throw new ForbiddenException(
           'Anda tidak memiliki akses untuk membuat pelajaran pada sekolah ini.',
         );

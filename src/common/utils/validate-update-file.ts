@@ -43,6 +43,8 @@ export const validateAndUpdateFiles = async (
     ...imageExtensions,
   ];
 
+  const baseUrl = configService.get<string>('baseUrl');
+
   if (oldFiles && oldFiles.length > 0) {
     for (const oldFile of oldFiles) {
       const oldFilePath = path.join(
@@ -51,7 +53,7 @@ export const validateAndUpdateFiles = async (
         '..',
         '..',
         'public',
-        oldFile.fileUrl.replace('http://localhost:6948/public/', ''),
+        oldFile.fileUrl.replace(`${baseUrl}/public/`, ''),
       );
       if (fs.existsSync(oldFilePath)) {
         fs.unlinkSync(oldFilePath);
@@ -99,7 +101,6 @@ export const validateAndUpdateFiles = async (
     const newFilePath = path.join(uploadPath, newFileName);
     fs.writeFileSync(newFilePath, newFile.buffer);
 
-    const baseUrl = configService.get<string>('baseUrl');
     const fileUrl = `${baseUrl}/public/${routeFolder}/${folder}/${newFileName}`;
 
     uploadedFiles.push({
